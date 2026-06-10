@@ -1,0 +1,138 @@
+fileFormatVersion: 2
+guid: 4317c1c0c69ee6f44bdd5e9e4f5ed16a
+timeCreated: 1525770026
+licenseType: Store
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Door
+    100002: //RootNode
+    100004: Door_Frame
+    100006: Gate_Plank
+    100008: Motor
+    100010: Pillar
+    100012: Pipe_Curve
+    100014: Pipe_straight_1m
+    100016: Pipe_straight_small
+    400000: Door
+    400002: //RootNode
+    400004: Door_Frame
+    400006: Gate_Plank
+    400008: Motor
+    400010: Pillar
+    400012: Pipe_Curve
+    400014: Pipe_straight_1m
+    400016: Pipe_straight_small
+    2100000: Door-Elements
+    2300000: Door
+    2300002: Door_Frame
+    2300004: Gate_Plank
+    2300006: Motor
+    2300008: Pillar
+    2300010: Pipe_Curve
+    2300012: Pipe_straight_1m
+    2300014: Pipe_straight_small
+    3300000: Door
+    3300002: Door_Frame
+    3300004: Gate_Plank
+    3300006: Motor
+    3300008: Pillar
+    3300010: Pipe_Curve
+    3300012: Pipe_straight_1m
+    3300014: Pipe_straight_small
+    4300000: Motor
+    4300002: Gate_Plank
+    4300004: Door_Frame
+    4300006: Door
+    4300008: Pipe_Curve
+    4300010: Pipe_straight_1m
+    4300012: Pipe_straight_small
+    4300014: Pillar
+    6400000: Door
+    6400002: Door_Frame
+    6400004: Gate_Plank
+    6400006: Motor
+    6400008: Pillar
+    6400010: Pipe_Curve
+    6400012: Pipe_straight_1m
+    6400014: Pipe_straight_small
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

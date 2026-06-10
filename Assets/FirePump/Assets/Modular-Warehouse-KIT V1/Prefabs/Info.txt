@@ -1,0 +1,8 @@
+Empty-Prefabs
+
+
+These 8 empty prefabs are just empty objects, 
+they should help you to organize the numerous elements in your object hierachy.
+So you do not have to create and rename new empty objects each time for the numerous elements of the warehouses.
+For example, if you want to group the base walls elements, 
+put the prefabs-empty E-base_Walls into the scene and put in all the base walls.

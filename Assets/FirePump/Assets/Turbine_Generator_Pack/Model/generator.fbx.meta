@@ -1,0 +1,231 @@
+fileFormatVersion: 2
+guid: ef1fb81ab0f6d124a810941b19dfeeb0
+ModelImporter:
+  serializedVersion: 25
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: arrow
+  - first:
+      1: 100002
+    second: //RootNode
+  - first:
+      1: 100004
+    second: handle
+  - first:
+      1: 100006
+    second: rotating_parts
+  - first:
+      1: 100008
+    second: console
+  - first:
+      1: 100010
+    second: Generator
+  - first:
+      1: 100012
+    second: Generator_addon
+  - first:
+      1: 100014
+    second: belt
+  - first:
+      1: 100016
+    second: Generator_side
+  - first:
+      4: 400000
+    second: arrow
+  - first:
+      4: 400002
+    second: //RootNode
+  - first:
+      4: 400004
+    second: handle
+  - first:
+      4: 400006
+    second: rotating_parts
+  - first:
+      4: 400008
+    second: console
+  - first:
+      4: 400010
+    second: Generator
+  - first:
+      4: 400012
+    second: Generator_addon
+  - first:
+      4: 400014
+    second: belt
+  - first:
+      4: 400016
+    second: Generator_side
+  - first:
+      23: 2300000
+    second: arrow
+  - first:
+      23: 2300002
+    second: //RootNode
+  - first:
+      23: 2300004
+    second: handle
+  - first:
+      23: 2300006
+    second: rotating_parts
+  - first:
+      23: 2300008
+    second: console
+  - first:
+      23: 2300010
+    second: Generator
+  - first:
+      23: 2300012
+    second: Generator_addon
+  - first:
+      23: 2300014
+    second: belt
+  - first:
+      23: 2300016
+    second: Generator_side
+  - first:
+      33: 3300000
+    second: arrow
+  - first:
+      33: 3300002
+    second: //RootNode
+  - first:
+      33: 3300004
+    second: handle
+  - first:
+      33: 3300006
+    second: rotating_parts
+  - first:
+      33: 3300008
+    second: console
+  - first:
+      33: 3300010
+    second: Generator
+  - first:
+      33: 3300012
+    second: Generator_addon
+  - first:
+      33: 3300014
+    second: belt
+  - first:
+      33: 3300016
+    second: Generator_side
+  - first:
+      43: 4300000
+    second: Generator
+  - first:
+      43: 4300002
+    second: arrow
+  - first:
+      43: 4300004
+    second: handle
+  - first:
+      43: 4300006
+    second: rotating_parts
+  - first:
+      43: 4300008
+    second: console
+  - first:
+      43: 4300010
+    second: Generator_addon
+  - first:
+      43: 4300012
+    second: belt
+  - first:
+      43: 4300014
+    second: Generator_side
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Generator_Albedo
+    second: {fileID: 2100000, guid: e8ff361adb9142c478b20ced6951960d, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 2
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 0
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
