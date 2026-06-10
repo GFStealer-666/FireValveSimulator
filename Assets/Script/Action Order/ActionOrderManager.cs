@@ -30,26 +30,82 @@ public class ActionOrderManager : MonoBehaviour
     [ContextMenu("Debug/Complete Current Step")]
     public void CompleteCurrentStepFromContextMenu()
     {
+        SkipCurrentStep();
+    }
+
+    public void SkipCurrentStep()
+    {
+        TrySkipCurrentStep();
+    }
+
+    public bool CanSkipCurrentStep()
+    {
+        return Application.isPlaying && sequenceActive && currentStep != null;
+    }
+
+    public bool TrySkipCurrentStep()
+    {
         if (!Application.isPlaying)
         {
-            Debug.LogWarning("Complete Current Step only works in Play Mode.");
+            Debug.LogWarning("Skip Current Step only works in Play Mode.");
+            return false;
+        }
+
+        if (!sequenceActive)
+        {
+            Debug.LogWarning("Cannot skip the current step because the sequence is not active. Use Debug/Reset Sequence first.");
+            return false;
+        }
+
+        if (currentStep == null)
+        {
+            Debug.LogWarning("Cannot skip the current step because no current step is assigned.");
+            return false;
+        }
+
+        Debug.Log($"Skipping step {currentStepIndex + 1}: {currentStep.stepName}");
+        CompleteStep();
+        return true;
+    }
+
+    [ContextMenu("Debug/Complete Current Mode")]
+    public void CompleteCurrentModeFromContextMenu()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("Complete Current Mode only works in Play Mode.");
             return;
         }
 
         if (!sequenceActive)
         {
-            Debug.LogWarning("Cannot complete the current step because the sequence is not active. Use Debug/Reset Sequence first.");
+            Debug.LogWarning("Cannot complete the current mode because the sequence is not active. Use Debug/Reset Sequence first.");
             return;
         }
 
-        if (currentStep == null)
+        if (!HasSteps() || currentStep == null)
         {
-            Debug.LogWarning("Cannot complete the current step because no current step is assigned.");
+            Debug.LogWarning("Cannot complete the current mode because there is no current step.");
             return;
         }
 
-        Debug.Log($"Debug completing step {currentStepIndex + 1}: {currentStep.stepName}");
-        CompleteStep();
+        int startStep = currentStepIndex + 1;
+        int safetyLimit = orderedSteps.Count + 1;
+        int completedSteps = 0;
+
+        while (sequenceActive && currentStep != null && completedSteps < safetyLimit)
+        {
+            CompleteStep();
+            completedSteps++;
+        }
+
+        if (sequenceActive)
+        {
+            Debug.LogWarning("Stopped completing the current mode because the safety limit was reached.");
+            return;
+        }
+
+        Debug.Log($"Debug completed current mode from step {startStep}. Completed {completedSteps} step(s).");
     }
 
     [ContextMenu("Debug/Reset Sequence")]

@@ -127,6 +127,34 @@ public class ExamManager : MonoBehaviour
             timer.text = "";
     }
 
+    public bool ApplyTimePenalty(float penaltySeconds)
+    {
+        if (!examRunning)
+        {
+            Debug.LogWarning("Cannot apply exam time penalty because the exam is not running.");
+            return false;
+        }
+
+        float penalty = Mathf.Max(0f, penaltySeconds);
+        if (penalty <= 0f)
+            return true;
+
+        remainingTimeFloat = Mathf.Max(0f, remainingTimeFloat - penalty);
+
+        if (timer != null)
+            timer.text = FormatRemainingTime(remainingTimeFloat);
+
+        Debug.Log($"Exam time penalty applied: -{penalty:0.#} seconds.");
+
+        if (remainingTimeFloat <= 0f)
+        {
+            FailedExam();
+            return false;
+        }
+
+        return true;
+    }
+
     private void FailedExam()
     {
         if (!examRunning)
