@@ -27,6 +27,55 @@ public class ActionOrderManager : MonoBehaviour
     public int CurrentStepIndex => sequenceActive ? currentStepIndex : -1;
     public int StepCount => orderedSteps != null ? orderedSteps.Count : 0;
 
+    [ContextMenu("Debug/Complete Current Step")]
+    public void CompleteCurrentStepFromContextMenu()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("Complete Current Step only works in Play Mode.");
+            return;
+        }
+
+        if (!sequenceActive)
+        {
+            Debug.LogWarning("Cannot complete the current step because the sequence is not active. Use Debug/Reset Sequence first.");
+            return;
+        }
+
+        if (currentStep == null)
+        {
+            Debug.LogWarning("Cannot complete the current step because no current step is assigned.");
+            return;
+        }
+
+        Debug.Log($"Debug completing step {currentStepIndex + 1}: {currentStep.stepName}");
+        CompleteStep();
+    }
+
+    [ContextMenu("Debug/Reset Sequence")]
+    public void ResetSequenceFromContextMenu()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("Reset Sequence only works in Play Mode.");
+            return;
+        }
+
+        ResetSequence();
+    }
+
+    [ContextMenu("Debug/Reset To Idle")]
+    public void ResetToIdleFromContextMenu()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("Reset To Idle only works in Play Mode.");
+            return;
+        }
+
+        ResetToIdle();
+    }
+
     public void InitializeSequence()
     {
         if (!HasSteps())

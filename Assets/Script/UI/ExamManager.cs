@@ -6,7 +6,6 @@ public class ExamManager : MonoBehaviour
 {
     public float examDuration = 300f;
     private float remainingTimeFloat;
-    private int remainingTime;
     private bool examRunning = false;
 
     [SerializeField] private TextMeshProUGUI timer;
@@ -45,10 +44,9 @@ public class ExamManager : MonoBehaviour
             return;
 
         remainingTimeFloat -= Time.deltaTime;
-        remainingTime = Mathf.CeilToInt(remainingTimeFloat);
 
         if (timer != null)
-            timer.text = remainingTime.ToString();
+            timer.text = FormatRemainingTime(remainingTimeFloat);
 
         if (remainingTimeFloat <= 0f)
             FailedExam();
@@ -73,10 +71,9 @@ public class ExamManager : MonoBehaviour
 
         examRunning = true;
         remainingTimeFloat = examDuration;
-        remainingTime = Mathf.CeilToInt(remainingTimeFloat);
 
         if (timer != null)
-            timer.text = remainingTime.ToString();
+            timer.text = FormatRemainingTime(remainingTimeFloat);
 
         onExamStart?.Invoke();
         UnlockSystem();
@@ -102,10 +99,9 @@ public class ExamManager : MonoBehaviour
     {
         examRunning = false;
         remainingTimeFloat = examDuration;
-        remainingTime = Mathf.CeilToInt(examDuration);
 
         if (timer != null)
-            timer.text = remainingTime.ToString();
+            timer.text = FormatRemainingTime(remainingTimeFloat);
 
         ResetStepHelpers();
 
@@ -166,5 +162,23 @@ public class ExamManager : MonoBehaviour
             pressureSimulator.isActive = false;
             pressureSimulator.ResetPressure();
         }
+    }
+
+    private string FormatRemainingTime(float timeSeconds)
+    {
+        float clampedTime = Mathf.Max(0f, timeSeconds);
+
+        if (clampedTime >= 60f)
+        {
+            int totalSeconds = Mathf.CeilToInt(clampedTime);
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            return $"{minutes:00}:{seconds:00}";
+        }
+
+        int totalCentiseconds = Mathf.Clamp(Mathf.CeilToInt(clampedTime * 100f), 0, 5999);
+        int wholeSeconds = totalCentiseconds / 100;
+        int centiseconds = totalCentiseconds % 100;
+        return $"{wholeSeconds:00}:{centiseconds:00}";
     }
 }
