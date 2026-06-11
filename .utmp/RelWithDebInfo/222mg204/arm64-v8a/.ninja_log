@@ -1,0 +1,10 @@
+# ninja log v5
+19	834	8028044682773214	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	d69512bb9fbd452a
+23	840	8028044682808315	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	a28d09d31378a5c
+10	854	8028044683018360	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	b7f9aca5c833956f
+28	865	8028044683123758	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	91a8019b0095e79e
+0	881	8028044683284656	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	4948f7cb2f631585
+15	1028	8028044684754870	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	b77cf442b7f3db08
+35	1043	8028044684921369	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	310409b915b8db22
+6	1108	8028044685545457	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	fb0460200a3b9a2c
+1109	1211	8028044686583687	D:/FireValveSimulator/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/222mg204/obj/arm64-v8a/libgame.so	88505ab76edefbba
