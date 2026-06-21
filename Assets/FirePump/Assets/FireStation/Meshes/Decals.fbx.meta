@@ -1,75 +1,163 @@
 fileFormatVersion: 2
 guid: 0698ac1bbd264814cae19da3713297cd
-timeCreated: 1552237160
-licenseType: Store
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: Decal_Border
-    100002: Decal_DashedLine
-    100004: Decal_DualLines
-    100006: Decal_NoParking
-    100008: Decal_SingleLine
-    100010: Decal_SkewLinesBig
-    100012: Decal_SkewLinesSmall
-    100014: Decal_Stop
-    100016: //RootNode
-    400000: Decal_Border
-    400002: Decal_DashedLine
-    400004: Decal_DualLines
-    400006: Decal_NoParking
-    400008: Decal_SingleLine
-    400010: Decal_SkewLinesBig
-    400012: Decal_SkewLinesSmall
-    400014: Decal_Stop
-    400016: //RootNode
-    2300000: Decal_Border
-    2300002: Decal_DashedLine
-    2300004: Decal_DualLines
-    2300006: Decal_NoParking
-    2300008: Decal_SingleLine
-    2300010: Decal_SkewLinesBig
-    2300012: Decal_SkewLinesSmall
-    2300014: Decal_Stop
-    3300000: Decal_Border
-    3300002: Decal_DashedLine
-    3300004: Decal_DualLines
-    3300006: Decal_NoParking
-    3300008: Decal_SingleLine
-    3300010: Decal_SkewLinesBig
-    3300012: Decal_SkewLinesSmall
-    3300014: Decal_Stop
-    4300000: Decal_DashedLine
-    4300002: Decal_NoParking
-    4300004: Decal_Stop
-    4300006: Decal_SkewLinesSmall
-    4300008: Decal_SkewLinesBig
-    4300010: Decal_Border
-    4300012: Decal_DualLines
-    4300014: Decal_SingleLine
-    9500000: //RootNode
+  serializedVersion: 24200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Decal_Border
+  - first:
+      1: 100002
+    second: Decal_DashedLine
+  - first:
+      1: 100004
+    second: Decal_DualLines
+  - first:
+      1: 100006
+    second: Decal_NoParking
+  - first:
+      1: 100008
+    second: Decal_SingleLine
+  - first:
+      1: 100010
+    second: Decal_SkewLinesBig
+  - first:
+      1: 100012
+    second: Decal_SkewLinesSmall
+  - first:
+      1: 100014
+    second: Decal_Stop
+  - first:
+      1: 100016
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Decal_Border
+  - first:
+      4: 400002
+    second: Decal_DashedLine
+  - first:
+      4: 400004
+    second: Decal_DualLines
+  - first:
+      4: 400006
+    second: Decal_NoParking
+  - first:
+      4: 400008
+    second: Decal_SingleLine
+  - first:
+      4: 400010
+    second: Decal_SkewLinesBig
+  - first:
+      4: 400012
+    second: Decal_SkewLinesSmall
+  - first:
+      4: 400014
+    second: Decal_Stop
+  - first:
+      4: 400016
+    second: //RootNode
+  - first:
+      23: 2300000
+    second: Decal_Border
+  - first:
+      23: 2300002
+    second: Decal_DashedLine
+  - first:
+      23: 2300004
+    second: Decal_DualLines
+  - first:
+      23: 2300006
+    second: Decal_NoParking
+  - first:
+      23: 2300008
+    second: Decal_SingleLine
+  - first:
+      23: 2300010
+    second: Decal_SkewLinesBig
+  - first:
+      23: 2300012
+    second: Decal_SkewLinesSmall
+  - first:
+      23: 2300014
+    second: Decal_Stop
+  - first:
+      33: 3300000
+    second: Decal_Border
+  - first:
+      33: 3300002
+    second: Decal_DashedLine
+  - first:
+      33: 3300004
+    second: Decal_DualLines
+  - first:
+      33: 3300006
+    second: Decal_NoParking
+  - first:
+      33: 3300008
+    second: Decal_SingleLine
+  - first:
+      33: 3300010
+    second: Decal_SkewLinesBig
+  - first:
+      33: 3300012
+    second: Decal_SkewLinesSmall
+  - first:
+      33: 3300014
+    second: Decal_Stop
+  - first:
+      43: 4300000
+    second: Decal_DashedLine
+  - first:
+      43: 4300002
+    second: Decal_NoParking
+  - first:
+      43: 4300004
+    second: Decal_Stop
+  - first:
+      43: 4300006
+    second: Decal_SkewLinesSmall
+  - first:
+      43: 4300008
+    second: Decal_SkewLinesBig
+  - first:
+      43: 4300010
+    second: Decal_Border
+  - first:
+      43: 4300012
+    second: Decal_DualLines
+  - first:
+      43: 4300014
+    second: Decal_SingleLine
+  - first:
+      95: 9500000
+    second: //RootNode
+  externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -77,26 +165,52 @@ ModelImporter:
     globalScale: 100
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 1
     tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -106,14 +220,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 100
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

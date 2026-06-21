@@ -219,6 +219,11 @@ public class ActionOrderManager : MonoBehaviour
                Array.Exists(step.objectTags, tag => tag == objectTag);
     }
 
+    public bool CurrentStepTagCompleted(string objectTag)
+    {
+        return !string.IsNullOrEmpty(objectTag) && completedTagsInCurrentStep.Contains(objectTag);
+    }
+
     public void ResetSequence()
     {
         Debug.Log("Resetting sequence...");

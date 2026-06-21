@@ -1,83 +1,233 @@
 fileFormatVersion: 2
 guid: 1f365c226788397429bd9a76a015f202
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: F_C_Door
-    100002: F_C_Planks
-    100004: F_Co_1m
-    100006: F_Co_2m
-    100008: F_Co_2m1
-    100010: F_Co_2m2
-    100012: F_Co_Barb_Wire
-    100014: F_Co_Barrier
-    100016: F_Co_Energy_Distribution
-    100018: F_Co_Post
-    100020: F_Co_Steelholder
-    100022: F_Co_Tube
-    100024: //RootNode
-    400000: F_C_Door
-    400002: F_C_Planks
-    400004: F_Co_1m
-    400006: F_Co_2m
-    400008: F_Co_2m1
-    400010: F_Co_2m2
-    400012: F_Co_Barb_Wire
-    400014: F_Co_Barrier
-    400016: F_Co_Energy_Distribution
-    400018: F_Co_Post
-    400020: F_Co_Steelholder
-    400022: F_Co_Tube
-    400024: //RootNode
-    2100000: Fence&Co
-    2300000: F_C_Door
-    2300002: F_C_Planks
-    2300004: F_Co_1m
-    2300006: F_Co_2m
-    2300008: F_Co_2m1
-    2300010: F_Co_2m2
-    2300012: F_Co_Barb_Wire
-    2300014: F_Co_Barrier
-    2300016: F_Co_Energy_Distribution
-    2300018: F_Co_Post
-    2300020: F_Co_Steelholder
-    2300022: F_Co_Tube
-    3300000: F_C_Door
-    3300002: F_C_Planks
-    3300004: F_Co_1m
-    3300006: F_Co_2m
-    3300008: F_Co_2m1
-    3300010: F_Co_2m2
-    3300012: F_Co_Barb_Wire
-    3300014: F_Co_Barrier
-    3300016: F_Co_Energy_Distribution
-    3300018: F_Co_Post
-    3300020: F_Co_Steelholder
-    3300022: F_Co_Tube
-    4300000: F_Co_2m2
-    4300002: F_Co_2m1
-    4300004: F_Co_2m
-    4300006: F_Co_1m
-    4300008: F_C_Door
-    4300010: F_C_Planks
-    4300012: F_Co_Post
-    4300014: F_Co_Barb_Wire
-    4300016: F_Co_Barrier
-    4300018: F_Co_Tube
-    4300020: F_Co_Steelholder
-    4300022: F_Co_Energy_Distribution
-    6400000: F_C_Door
-    6400002: F_C_Planks
-    6400004: F_Co_1m
-    6400006: F_Co_2m
-    6400008: F_Co_2m1
-    6400010: F_Co_2m2
-    6400012: F_Co_Barb_Wire
-    6400014: F_Co_Barrier
-    6400016: F_Co_Energy_Distribution
-    6400018: F_Co_Post
-    6400020: F_Co_Steelholder
-    6400022: F_Co_Tube
+  serializedVersion: 24200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: F_C_Door
+  - first:
+      1: 100002
+    second: F_C_Planks
+  - first:
+      1: 100004
+    second: F_Co_1m
+  - first:
+      1: 100006
+    second: F_Co_2m
+  - first:
+      1: 100008
+    second: F_Co_2m1
+  - first:
+      1: 100010
+    second: F_Co_2m2
+  - first:
+      1: 100012
+    second: F_Co_Barb_Wire
+  - first:
+      1: 100014
+    second: F_Co_Barrier
+  - first:
+      1: 100016
+    second: F_Co_Energy_Distribution
+  - first:
+      1: 100018
+    second: F_Co_Post
+  - first:
+      1: 100020
+    second: F_Co_Steelholder
+  - first:
+      1: 100022
+    second: F_Co_Tube
+  - first:
+      1: 100024
+    second: //RootNode
+  - first:
+      4: 400000
+    second: F_C_Door
+  - first:
+      4: 400002
+    second: F_C_Planks
+  - first:
+      4: 400004
+    second: F_Co_1m
+  - first:
+      4: 400006
+    second: F_Co_2m
+  - first:
+      4: 400008
+    second: F_Co_2m1
+  - first:
+      4: 400010
+    second: F_Co_2m2
+  - first:
+      4: 400012
+    second: F_Co_Barb_Wire
+  - first:
+      4: 400014
+    second: F_Co_Barrier
+  - first:
+      4: 400016
+    second: F_Co_Energy_Distribution
+  - first:
+      4: 400018
+    second: F_Co_Post
+  - first:
+      4: 400020
+    second: F_Co_Steelholder
+  - first:
+      4: 400022
+    second: F_Co_Tube
+  - first:
+      4: 400024
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: Fence&Co
+  - first:
+      23: 2300000
+    second: F_C_Door
+  - first:
+      23: 2300002
+    second: F_C_Planks
+  - first:
+      23: 2300004
+    second: F_Co_1m
+  - first:
+      23: 2300006
+    second: F_Co_2m
+  - first:
+      23: 2300008
+    second: F_Co_2m1
+  - first:
+      23: 2300010
+    second: F_Co_2m2
+  - first:
+      23: 2300012
+    second: F_Co_Barb_Wire
+  - first:
+      23: 2300014
+    second: F_Co_Barrier
+  - first:
+      23: 2300016
+    second: F_Co_Energy_Distribution
+  - first:
+      23: 2300018
+    second: F_Co_Post
+  - first:
+      23: 2300020
+    second: F_Co_Steelholder
+  - first:
+      23: 2300022
+    second: F_Co_Tube
+  - first:
+      33: 3300000
+    second: F_C_Door
+  - first:
+      33: 3300002
+    second: F_C_Planks
+  - first:
+      33: 3300004
+    second: F_Co_1m
+  - first:
+      33: 3300006
+    second: F_Co_2m
+  - first:
+      33: 3300008
+    second: F_Co_2m1
+  - first:
+      33: 3300010
+    second: F_Co_2m2
+  - first:
+      33: 3300012
+    second: F_Co_Barb_Wire
+  - first:
+      33: 3300014
+    second: F_Co_Barrier
+  - first:
+      33: 3300016
+    second: F_Co_Energy_Distribution
+  - first:
+      33: 3300018
+    second: F_Co_Post
+  - first:
+      33: 3300020
+    second: F_Co_Steelholder
+  - first:
+      33: 3300022
+    second: F_Co_Tube
+  - first:
+      43: 4300000
+    second: F_Co_2m2
+  - first:
+      43: 4300002
+    second: F_Co_2m1
+  - first:
+      43: 4300004
+    second: F_Co_2m
+  - first:
+      43: 4300006
+    second: F_Co_1m
+  - first:
+      43: 4300008
+    second: F_C_Door
+  - first:
+      43: 4300010
+    second: F_C_Planks
+  - first:
+      43: 4300012
+    second: F_Co_Post
+  - first:
+      43: 4300014
+    second: F_Co_Barb_Wire
+  - first:
+      43: 4300016
+    second: F_Co_Barrier
+  - first:
+      43: 4300018
+    second: F_Co_Tube
+  - first:
+      43: 4300020
+    second: F_Co_Steelholder
+  - first:
+      43: 4300022
+    second: F_Co_Energy_Distribution
+  - first:
+      64: 6400000
+    second: F_C_Door
+  - first:
+      64: 6400002
+    second: F_C_Planks
+  - first:
+      64: 6400004
+    second: F_Co_1m
+  - first:
+      64: 6400006
+    second: F_Co_2m
+  - first:
+      64: 6400008
+    second: F_Co_2m1
+  - first:
+      64: 6400010
+    second: F_Co_2m2
+  - first:
+      64: 6400012
+    second: F_Co_Barb_Wire
+  - first:
+      64: 6400014
+    second: F_Co_Barrier
+  - first:
+      64: 6400016
+    second: F_Co_Energy_Distribution
+  - first:
+      64: 6400018
+    second: F_Co_Post
+  - first:
+      64: 6400020
+    second: F_Co_Steelholder
+  - first:
+      64: 6400022
+    second: F_Co_Tube
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -85,7 +235,7 @@ ModelImporter:
       name: Fence&Co
     second: {fileID: 2100000, guid: 5dccd320e9e19604482d19240e2de148, type: 2}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -94,9 +244,8 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -117,32 +266,52 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 1
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 0
     importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -152,14 +321,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

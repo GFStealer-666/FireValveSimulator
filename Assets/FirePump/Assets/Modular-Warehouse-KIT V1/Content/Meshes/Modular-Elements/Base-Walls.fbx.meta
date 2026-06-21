@@ -1,76 +1,200 @@
 fileFormatVersion: 2
 guid: 49e21dd6d46e8134896216632a36dcbd
-timeCreated: 1524761104
-licenseType: Store
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Base_Walls_1m
-    100004: Base_Walls_2m
-    100006: Base_Walls_4m
-    100008: Base_Walls_Corner
-    100010: Base_Walls_Cross
-    100012: Base_Walls_Door
-    100014: Base_Walls_Gate
-    100016: Base_Walls_T
-    100018: Base_Walls_Window
-    100020: Base_Walls_Windowbig
-    400000: //RootNode
-    400002: Base_Walls_1m
-    400004: Base_Walls_2m
-    400006: Base_Walls_4m
-    400008: Base_Walls_Corner
-    400010: Base_Walls_Cross
-    400012: Base_Walls_Door
-    400014: Base_Walls_Gate
-    400016: Base_Walls_T
-    400018: Base_Walls_Window
-    400020: Base_Walls_Windowbig
-    2100000: Base-Walls
-    2300000: Base_Walls_1m
-    2300002: Base_Walls_2m
-    2300004: Base_Walls_4m
-    2300006: Base_Walls_Corner
-    2300008: Base_Walls_Cross
-    2300010: Base_Walls_Door
-    2300012: Base_Walls_Gate
-    2300014: Base_Walls_T
-    2300016: Base_Walls_Window
-    2300018: Base_Walls_Windowbig
-    3300000: Base_Walls_1m
-    3300002: Base_Walls_2m
-    3300004: Base_Walls_4m
-    3300006: Base_Walls_Corner
-    3300008: Base_Walls_Cross
-    3300010: Base_Walls_Door
-    3300012: Base_Walls_Gate
-    3300014: Base_Walls_T
-    3300016: Base_Walls_Window
-    3300018: Base_Walls_Windowbig
-    4300000: Base_Walls_Corner
-    4300002: Base_Walls_T
-    4300004: Base_Walls_Cross
-    4300006: Base_Walls_1m
-    4300008: Base_Walls_2m
-    4300010: Base_Walls_4m
-    4300012: Base_Walls_Window
-    4300014: Base_Walls_Windowbig
-    4300016: Base_Walls_Gate
-    4300018: Base_Walls_Door
-    6400000: Base_Walls_1m
-    6400002: Base_Walls_2m
-    6400004: Base_Walls_4m
-    6400006: Base_Walls_Corner
-    6400008: Base_Walls_Cross
-    6400010: Base_Walls_Door
-    6400012: Base_Walls_Gate
-    6400014: Base_Walls_T
-    6400016: Base_Walls_Window
-    6400018: Base_Walls_Windowbig
+  serializedVersion: 24200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Base_Walls_1m
+  - first:
+      1: 100004
+    second: Base_Walls_2m
+  - first:
+      1: 100006
+    second: Base_Walls_4m
+  - first:
+      1: 100008
+    second: Base_Walls_Corner
+  - first:
+      1: 100010
+    second: Base_Walls_Cross
+  - first:
+      1: 100012
+    second: Base_Walls_Door
+  - first:
+      1: 100014
+    second: Base_Walls_Gate
+  - first:
+      1: 100016
+    second: Base_Walls_T
+  - first:
+      1: 100018
+    second: Base_Walls_Window
+  - first:
+      1: 100020
+    second: Base_Walls_Windowbig
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Base_Walls_1m
+  - first:
+      4: 400004
+    second: Base_Walls_2m
+  - first:
+      4: 400006
+    second: Base_Walls_4m
+  - first:
+      4: 400008
+    second: Base_Walls_Corner
+  - first:
+      4: 400010
+    second: Base_Walls_Cross
+  - first:
+      4: 400012
+    second: Base_Walls_Door
+  - first:
+      4: 400014
+    second: Base_Walls_Gate
+  - first:
+      4: 400016
+    second: Base_Walls_T
+  - first:
+      4: 400018
+    second: Base_Walls_Window
+  - first:
+      4: 400020
+    second: Base_Walls_Windowbig
+  - first:
+      21: 2100000
+    second: Base-Walls
+  - first:
+      23: 2300000
+    second: Base_Walls_1m
+  - first:
+      23: 2300002
+    second: Base_Walls_2m
+  - first:
+      23: 2300004
+    second: Base_Walls_4m
+  - first:
+      23: 2300006
+    second: Base_Walls_Corner
+  - first:
+      23: 2300008
+    second: Base_Walls_Cross
+  - first:
+      23: 2300010
+    second: Base_Walls_Door
+  - first:
+      23: 2300012
+    second: Base_Walls_Gate
+  - first:
+      23: 2300014
+    second: Base_Walls_T
+  - first:
+      23: 2300016
+    second: Base_Walls_Window
+  - first:
+      23: 2300018
+    second: Base_Walls_Windowbig
+  - first:
+      33: 3300000
+    second: Base_Walls_1m
+  - first:
+      33: 3300002
+    second: Base_Walls_2m
+  - first:
+      33: 3300004
+    second: Base_Walls_4m
+  - first:
+      33: 3300006
+    second: Base_Walls_Corner
+  - first:
+      33: 3300008
+    second: Base_Walls_Cross
+  - first:
+      33: 3300010
+    second: Base_Walls_Door
+  - first:
+      33: 3300012
+    second: Base_Walls_Gate
+  - first:
+      33: 3300014
+    second: Base_Walls_T
+  - first:
+      33: 3300016
+    second: Base_Walls_Window
+  - first:
+      33: 3300018
+    second: Base_Walls_Windowbig
+  - first:
+      43: 4300000
+    second: Base_Walls_Corner
+  - first:
+      43: 4300002
+    second: Base_Walls_T
+  - first:
+      43: 4300004
+    second: Base_Walls_Cross
+  - first:
+      43: 4300006
+    second: Base_Walls_1m
+  - first:
+      43: 4300008
+    second: Base_Walls_2m
+  - first:
+      43: 4300010
+    second: Base_Walls_4m
+  - first:
+      43: 4300012
+    second: Base_Walls_Window
+  - first:
+      43: 4300014
+    second: Base_Walls_Windowbig
+  - first:
+      43: 4300016
+    second: Base_Walls_Gate
+  - first:
+      43: 4300018
+    second: Base_Walls_Door
+  - first:
+      64: 6400000
+    second: Base_Walls_1m
+  - first:
+      64: 6400002
+    second: Base_Walls_2m
+  - first:
+      64: 6400004
+    second: Base_Walls_4m
+  - first:
+      64: 6400006
+    second: Base_Walls_Corner
+  - first:
+      64: 6400008
+    second: Base_Walls_Cross
+  - first:
+      64: 6400010
+    second: Base_Walls_Door
+  - first:
+      64: 6400012
+    second: Base_Walls_Gate
+  - first:
+      64: 6400014
+    second: Base_Walls_T
+  - first:
+      64: 6400016
+    second: Base_Walls_Window
+  - first:
+      64: 6400018
+    second: Base_Walls_Windowbig
   externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -79,14 +203,14 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -101,32 +225,52 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 1
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -136,14 +280,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

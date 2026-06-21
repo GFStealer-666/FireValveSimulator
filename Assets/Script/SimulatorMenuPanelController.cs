@@ -1,9 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
+
 public class SimulatorMenuPanelController : MonoBehaviour
 {
+    private const string DefaultHoldSpinnerAssetPath = "Assets/Animated Loading Icons/Prefabs/Spinner/Spinner 1.prefab";
+
     [SerializeField] private SimulatorModeManager modeManager;
     [SerializeField] private ActionOrderManager actionOrderManager;
     [SerializeField] private ExamManager examManager;
@@ -15,6 +23,13 @@ public class SimulatorMenuPanelController : MonoBehaviour
     [SerializeField] private GameObject examFailedPanel;
     [SerializeField] private bool showMainMenuOnStart = true;
     [SerializeField] private bool wireButtonListenersOnEnable = true;
+
+    [Header("Hold To Confirm")]
+    [SerializeField] private bool requireHoldToConfirm = true;
+    [SerializeField, Min(0f)] private float holdToConfirmSeconds = 0.5f;
+    [SerializeField] private GameObject holdSpinnerPrefab;
+    [SerializeField] private Vector2 holdSpinnerSize = new Vector2(72f, 72f);
+    [SerializeField] private Vector2 holdSpinnerAnchoredOffset = Vector2.zero;
 
     [Header("Main Menu Buttons")]
     [SerializeField] private Button learningModeButton;
@@ -43,6 +58,10 @@ public class SimulatorMenuPanelController : MonoBehaviour
 
     private void Awake()
     {
+#if UNITY_EDITOR
+        ResolveDefaultSpinnerPrefabInEditor();
+#endif
+
         if (modeManager == null)
             modeManager = FindAnyObjectByType<SimulatorModeManager>(FindObjectsInactive.Include);
 
@@ -54,7 +73,40 @@ public class SimulatorMenuPanelController : MonoBehaviour
 
         ResolveButtonReferences();
         EnsureSkipStepButtonExists();
+        ConfigureHoldToConfirmButtons();
     }
+
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        ResolveDefaultSpinnerPrefabInEditor();
+    }
+
+    private void OnValidate()
+    {
+        holdToConfirmSeconds = Mathf.Max(0f, holdToConfirmSeconds);
+        holdSpinnerSize.x = Mathf.Max(0f, holdSpinnerSize.x);
+        holdSpinnerSize.y = Mathf.Max(0f, holdSpinnerSize.y);
+        ResolveDefaultSpinnerPrefabInEditor();
+    }
+
+    private void ResolveDefaultSpinnerPrefabInEditor()
+    {
+        if (holdSpinnerPrefab == null)
+            holdSpinnerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(DefaultHoldSpinnerAssetPath);
+    }
+
+    [ContextMenu("Setup/Attach Hold To Confirm Components To Buttons")]
+    private void AttachHoldToConfirmComponentsToButtons()
+    {
+        ResolveDefaultSpinnerPrefabInEditor();
+        ResolveButtonReferences();
+        EnsureSkipStepButtonExists();
+        ConfigureHoldToConfirmButtons();
+        EditorUtility.SetDirty(this);
+        EditorSceneManager.MarkSceneDirty(gameObject.scene);
+    }
+#endif
 
     private void OnEnable()
     {
@@ -63,6 +115,8 @@ public class SimulatorMenuPanelController : MonoBehaviour
 
         if (wireButtonListenersOnEnable)
             WireButtonListeners();
+
+        ConfigureHoldToConfirmButtons();
     }
 
     private void OnDisable()
@@ -360,6 +414,7 @@ public class SimulatorMenuPanelController : MonoBehaviour
         skipStepButtonRoot = buttonObject;
         skipStepButton = button;
         SetSkipStepButtonVisible(false);
+        ConfigureHoldToConfirmButton(skipStepButton);
 
         if (Application.isPlaying)
             WireButton(skipStepButton, SkipCurrentStep);
@@ -369,6 +424,7 @@ public class SimulatorMenuPanelController : MonoBehaviour
     public void WireButtonListeners()
     {
         ResolveButtonReferences();
+        ConfigureHoldToConfirmButtons();
 
         WireButton(learningModeButton, ShowLearningPanel);
         WireButton(trainingModeButton, ShowTrainingPanel);
@@ -515,5 +571,80 @@ public class SimulatorMenuPanelController : MonoBehaviour
             return;
 
         button.onClick.RemoveListener(action);
+    }
+
+    private void ConfigureHoldToConfirmButtons()
+    {
+        HashSet<Button> buttons = new HashSet<Button>();
+
+        AddButton(buttons, learningModeButton);
+        AddButton(buttons, trainingModeButton);
+        AddButton(buttons, examModeButton);
+        AddButton(buttons, learningBackButton);
+        AddButton(buttons, learningStartButton);
+        AddButton(buttons, trainingBackButton);
+        AddButton(buttons, trainingStartButton);
+        AddButton(buttons, examBackButton);
+        AddButton(buttons, examStartButton);
+        AddButton(buttons, returnToMenuButton);
+        AddButton(buttons, skipStepButton);
+
+        AddButtonsFromRoot(buttons, mainMenuPanel);
+        AddButtonsFromRoot(buttons, learningModePanel);
+        AddButtonsFromRoot(buttons, trainingModePanel);
+        AddButtonsFromRoot(buttons, examModePanel);
+        AddButtonsFromRoot(buttons, completePanel);
+        AddButtonsFromRoot(buttons, examFailedPanel);
+        AddButtonsFromRoot(buttons, returnToMenuButtonRoot);
+        AddButtonsFromRoot(buttons, skipStepButtonRoot);
+
+        foreach (Button button in buttons)
+            ConfigureHoldToConfirmButton(button);
+    }
+
+    private void ConfigureHoldToConfirmButton(Button button)
+    {
+        if (button == null)
+            return;
+
+        HoldToConfirmButton holdButton = button.GetComponent<HoldToConfirmButton>();
+
+        if (!requireHoldToConfirm)
+        {
+            if (holdButton != null)
+                holdButton.enabled = false;
+
+            return;
+        }
+
+        if (holdButton == null)
+            holdButton = button.gameObject.AddComponent<HoldToConfirmButton>();
+
+        holdButton.enabled = true;
+        holdButton.Configure(button, holdToConfirmSeconds, holdSpinnerPrefab, holdSpinnerSize, holdSpinnerAnchoredOffset);
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            EditorUtility.SetDirty(holdButton);
+            EditorUtility.SetDirty(button.gameObject);
+            EditorSceneManager.MarkSceneDirty(button.gameObject.scene);
+        }
+#endif
+    }
+
+    private void AddButton(HashSet<Button> buttons, Button button)
+    {
+        if (button != null)
+            buttons.Add(button);
+    }
+
+    private void AddButtonsFromRoot(HashSet<Button> buttons, GameObject root)
+    {
+        if (root == null)
+            return;
+
+        foreach (Button button in root.GetComponentsInChildren<Button>(true))
+            AddButton(buttons, button);
     }
 }

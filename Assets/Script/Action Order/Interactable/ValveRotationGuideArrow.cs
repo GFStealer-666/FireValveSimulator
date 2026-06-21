@@ -5,6 +5,7 @@ public class ValveRotationGuideArrow : MonoBehaviour
     [Header("Step Visibility")]
     [SerializeField] private ValveStateTracker linkedValve;
     [SerializeField] private bool onlyShowDuringValveStep = false;
+    [SerializeField] private bool hideWhenSubStepCompleted = true;
     [SerializeField] private bool hideInExamMode = true;
 
     [Header("Arrow Visual")]
@@ -136,22 +137,24 @@ public class ValveRotationGuideArrow : MonoBehaviour
 
     private bool ShouldAnimateNow()
     {
-        if (!onlyShowDuringValveStep)
-            return true;
-
         if (actionOrderManager == null)
             actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
 
         if (actionOrderManager == null || linkedValve == null)
-            return false;
+            return !onlyShowDuringValveStep;
 
         if (hideInExamMode && actionOrderManager.isExam)
             return false;
 
         ActionStep currentStep = actionOrderManager.GetCurrentStep();
-        return currentStep != null &&
+        bool isLinkedValveStep = currentStep != null &&
                (currentStep.actionType == ActionType.TurnOnValve || currentStep.actionType == ActionType.TurnOffValve) &&
                actionOrderManager.CurrentStepRequiresTag(linkedValve.tag);
+
+        if (hideWhenSubStepCompleted && isLinkedValveStep && actionOrderManager.CurrentStepTagCompleted(linkedValve.tag))
+            return false;
+
+        return onlyShowDuringValveStep ? isLinkedValveStep : true;
     }
 
     private void ResetPose()

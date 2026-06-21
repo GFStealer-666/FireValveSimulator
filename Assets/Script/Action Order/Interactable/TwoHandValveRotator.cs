@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -37,6 +38,11 @@ public class TwoHandValveRotator : XRBaseInteractable
     [SerializeField] private float maxDegreesPerFrame = 45f;
     [SerializeField] private ValveStateTracker linkedValve;
 
+    [Header("Editor Testing")]
+    [SerializeField] private float testRotationDegrees = 90f;
+    [SerializeField] private float testRotationDuration = 5f;
+    [SerializeField] private bool testRotationCountsForActionProgress;
+
     [Header("Tracked Hand Fallback")]
     [SerializeField] private bool enableTrackedHandFallback = true;
     [SerializeField] private TrackedHandPoint trackedHandPoint = TrackedHandPoint.Pinch;
@@ -58,6 +64,7 @@ public class TwoHandValveRotator : XRBaseInteractable
     private ActionStep trackedStep;
     private XRHandSubsystem handSubsystem;
     private XROrigin xrOrigin;
+    private Coroutine testRotationRoutine;
     private float accumulatedStepDegrees;
 
     protected override void Awake()
@@ -118,6 +125,84 @@ public class TwoHandValveRotator : XRBaseInteractable
         trackedStep = null;
         RefreshInteractorBaselines();
         ClearTrackedHandState();
+    }
+
+    [ContextMenu("Test/Rotate Handle By Test Degrees")]
+    private void RotateHandleByTestDegrees()
+    {
+        TestRotateHandle(testRotationDegrees);
+    }
+
+    [ContextMenu("Test/Rotate Handle Back By Test Degrees")]
+    private void RotateHandleBackByTestDegrees()
+    {
+        TestRotateHandle(-testRotationDegrees);
+    }
+
+    [ContextMenu("Test/Rotate Handle By Test Degrees Over Duration")]
+    private void RotateHandleByTestDegreesOverDuration()
+    {
+        StartTestRotation(testRotationDegrees);
+    }
+
+    [ContextMenu("Test/Rotate Handle Back By Test Degrees Over Duration")]
+    private void RotateHandleBackByTestDegreesOverDuration()
+    {
+        StartTestRotation(-testRotationDegrees);
+    }
+
+    [ContextMenu("Test/Stop Timed Rotation")]
+    private void StopTimedTestRotation()
+    {
+        if (testRotationRoutine == null)
+            return;
+
+        StopCoroutine(testRotationRoutine);
+        testRotationRoutine = null;
+    }
+
+    private void TestRotateHandle(float degrees)
+    {
+        RotateHandle(degrees);
+
+        if (testRotationCountsForActionProgress)
+            TrackActionProgress(degrees);
+    }
+
+    private void StartTestRotation(float totalDegrees)
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("Timed valve test rotation only runs in Play Mode. Use the instant test rotation menu outside Play Mode.");
+            return;
+        }
+
+        StopTimedTestRotation();
+        testRotationRoutine = StartCoroutine(RotateHandleOverDuration(totalDegrees));
+    }
+
+    private IEnumerator RotateHandleOverDuration(float totalDegrees)
+    {
+        float duration = Mathf.Max(0.0001f, testRotationDuration);
+        float elapsed = 0f;
+        float rotatedDegrees = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float targetDegrees = Mathf.Lerp(0f, totalDegrees, Mathf.Clamp01(elapsed / duration));
+            float deltaDegrees = targetDegrees - rotatedDegrees;
+            rotatedDegrees = targetDegrees;
+
+            TestRotateHandle(deltaDegrees);
+            yield return null;
+        }
+
+        float finalDelta = totalDegrees - rotatedDegrees;
+        if (!Mathf.Approximately(finalDelta, 0f))
+            TestRotateHandle(finalDelta);
+
+        testRotationRoutine = null;
     }
 
     private void HandleSelectEntered(SelectEnterEventArgs args)
