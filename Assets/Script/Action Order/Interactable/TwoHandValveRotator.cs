@@ -9,6 +9,8 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class TwoHandValveRotator : XRBaseInteractable
 {
+    private const float MinVectorSqrMagnitude = 0.0001f;
+
     private enum TrackedHandId
     {
         Left,
@@ -66,6 +68,7 @@ public class TwoHandValveRotator : XRBaseInteractable
     private XROrigin xrOrigin;
     private Coroutine testRotationRoutine;
     private float accumulatedStepDegrees;
+    private bool warnedInvalidReferenceDirection;
 
     protected override void Awake()
     {
@@ -82,6 +85,8 @@ public class TwoHandValveRotator : XRBaseInteractable
 
         actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
         xrOrigin = FindAnyObjectByType<XROrigin>();
+
+        WarnAboutSetupIssues();
     }
 
     protected override void OnEnable()
@@ -388,19 +393,43 @@ public class TwoHandValveRotator : XRBaseInteractable
         if (rotationCenter == null)
             return false;
 
+        if (localRotationAxis.sqrMagnitude < MinVectorSqrMagnitude)
+            return false;
+
         Vector3 center = rotationCenter.position;
         Vector3 normal = transform.TransformDirection(localRotationAxis.normalized);
-        Vector3 reference = Vector3.ProjectOnPlane(transform.TransformDirection(localReferenceDirection), normal);
+        Vector3 reference = GetWorldReferenceDirection(normal);
         Vector3 radial = Vector3.ProjectOnPlane(worldPosition - center, normal);
 
-        if (reference.sqrMagnitude < 0.0001f)
-            reference = Vector3.ProjectOnPlane(transform.up, normal);
-
-        if (reference.sqrMagnitude < 0.0001f || radial.sqrMagnitude < 0.0001f)
+        if (reference.sqrMagnitude < MinVectorSqrMagnitude || radial.sqrMagnitude < MinVectorSqrMagnitude)
             return false;
 
         angle = Vector3.SignedAngle(reference.normalized, radial.normalized, normal);
         return true;
+    }
+
+    private Vector3 GetWorldReferenceDirection(Vector3 normal)
+    {
+        Vector3 reference = Vector3.ProjectOnPlane(transform.TransformDirection(localReferenceDirection.normalized), normal);
+        if (reference.sqrMagnitude >= MinVectorSqrMagnitude)
+            return reference;
+
+        if (!warnedInvalidReferenceDirection)
+        {
+            warnedInvalidReferenceDirection = true;
+            Debug.LogWarning($"{nameof(TwoHandValveRotator)} on '{name}' has Local Reference Direction parallel to Local Rotation Axis. " +
+                             "Use different directions in the Inspector. Falling back to an automatic perpendicular reference.", this);
+        }
+
+        reference = Vector3.ProjectOnPlane(transform.up, normal);
+        if (reference.sqrMagnitude >= MinVectorSqrMagnitude)
+            return reference;
+
+        reference = Vector3.ProjectOnPlane(transform.right, normal);
+        if (reference.sqrMagnitude >= MinVectorSqrMagnitude)
+            return reference;
+
+        return Vector3.ProjectOnPlane(transform.forward, normal);
     }
 
     private bool TryGetTrackedHandWorldPosition(TrackedHandId handId, out Vector3 worldPosition)
@@ -556,7 +585,10 @@ public class TwoHandValveRotator : XRBaseInteractable
             if (valveCollider == null || !valveCollider.enabled)
                 continue;
 
-            Vector3 closestPoint = valveCollider.ClosestPoint(worldPosition);
+            Vector3 closestPoint = SupportsClosestPoint(valveCollider)
+                ? valveCollider.ClosestPoint(worldPosition)
+                : valveCollider.bounds.ClosestPoint(worldPosition);
+
             if ((closestPoint - worldPosition).sqrMagnitude <= radiusSquared)
                 return true;
         }
@@ -564,6 +596,35 @@ public class TwoHandValveRotator : XRBaseInteractable
         Transform centerTransform = rotationCenter != null ? rotationCenter : handle;
         return centerTransform != null &&
                (centerTransform.position - worldPosition).sqrMagnitude <= radiusSquared;
+    }
+
+    private static bool SupportsClosestPoint(Collider c)
+    {
+        if (c is MeshCollider mc) return mc.convex;
+        return c is BoxCollider || c is SphereCollider || c is CapsuleCollider;
+    }
+
+    private void WarnAboutSetupIssues()
+    {
+        if (localRotationAxis.sqrMagnitude < MinVectorSqrMagnitude)
+            Debug.LogWarning($"{nameof(TwoHandValveRotator)} on '{name}' has a zero Local Rotation Axis and cannot rotate.", this);
+
+        Vector3 referenceOnRotationPlane = Vector3.ProjectOnPlane(localReferenceDirection, localRotationAxis.normalized);
+        if (referenceOnRotationPlane.sqrMagnitude < MinVectorSqrMagnitude)
+        {
+            Debug.LogWarning($"{nameof(TwoHandValveRotator)} on '{name}' has Local Reference Direction parallel to Local Rotation Axis. " +
+                             "Set them to different axes, for example Axis=(0,0,1) and Reference=(0,1,0).", this);
+        }
+
+        for (int i = 0; i < colliders.Count; i++)
+        {
+            Collider valveCollider = colliders[i];
+            if (valveCollider == null || valveCollider.isTrigger)
+                continue;
+
+            Debug.LogWarning($"{nameof(TwoHandValveRotator)} on '{name}' uses a non-trigger collider '{valveCollider.name}'. " +
+                             "Controller hands can physically collide with it and shake. For the interaction-only valve collider, enable Is Trigger.", valveCollider);
+        }
     }
 
     private static bool IsValidVector(Vector3 value)
