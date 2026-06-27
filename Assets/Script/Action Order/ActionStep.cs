@@ -10,7 +10,8 @@ public enum ActionType
     SwitchAuto,
     SwitchStop,
     CheckPSI,
-    WaitLimitedTime
+    WaitLimitedTime,
+    WearHeadphone
 }
 
 [CreateAssetMenu(fileName = "NewActionStep", menuName = "FirePump/Action Step")]

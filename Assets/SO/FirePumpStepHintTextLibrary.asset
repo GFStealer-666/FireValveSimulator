@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: FirePumpStepHintTextLibrary
   m_EditorClassIdentifier: 
   entries:
+  - step: {fileID: 11400000, guid: ed37da0526e54a39b5c29119f931534b, type: 2}
+    title: "0. Ear protection"
+    trainingText: Step 0. Grab the EarPhone and pull it close to your body to wear it.
+    learningDetailText: Wear the ear protection before starting the fire valve operation.
   - step: {fileID: 11400000, guid: ed292dab703080841a4ed84ccd8a21ec, type: 2}
     title: "1. วาล์ว Discharge"
     trainingText: ขั้นตอน 1. ปิดวาล์ว Discharge ที่ 1 (ซ้าย) และ 2 (ขวา) หมุนจำนวน 41 ครั้ง (ครึ่งวงกลม) เพื่อปิดน้ำที่ไหลในระบบทั่วโรงไฟฟ้า

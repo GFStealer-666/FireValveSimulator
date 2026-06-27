@@ -17,6 +17,7 @@ TagManager:
   - ACFirePumpSwitchOff
   - WaitLimitedTime
   - PlayerHand
+  - EarPhone
   - JockeyPump1
   layers:
   - Default
