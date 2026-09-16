@@ -7,7 +7,8 @@ namespace FireValveSimulator
     public class ExamManager : MonoBehaviour
     {
         public float examDuration = 300f;
-        private float remainingTimeFloat;
+        [SerializeField] private float remainingTimeFloat;
+        [SerializeField] private float currentTimeFloat = 0f;
         private bool examRunning = false;
 
         [SerializeField] private TextMeshProUGUI timer;
@@ -46,7 +47,7 @@ namespace FireValveSimulator
                 return;
 
             remainingTimeFloat -= Time.deltaTime;
-
+            
             if (timer != null)
                 timer.text = FormatRemainingTime(remainingTimeFloat);
 
