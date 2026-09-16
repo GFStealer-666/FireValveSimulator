@@ -10,8 +10,9 @@ namespace FireValveSimulator
         [SerializeField] private float remainingTimeFloat;
         [SerializeField] private float currentTimeFloat = 0f;
         private bool examRunning = false;
-
-        [SerializeField] private TextMeshProUGUI timer;
+        [SerializeField] private bool isExamTimeLimited = true;
+        [SerializeField] private TextMeshProUGUI countdownLabel;
+        [SerializeField] private TextMeshProUGUI currentTimeLabel;
         private ActionOrderManager actionOrderManager;
 
         public UnityEvent onExamStart;
@@ -47,11 +48,15 @@ namespace FireValveSimulator
                 return;
 
             remainingTimeFloat -= Time.deltaTime;
-            
-            if (timer != null)
-                timer.text = FormatRemainingTime(remainingTimeFloat);
+            currentTimeFloat += Time.deltaTime;
 
-            if (remainingTimeFloat <= 0f)
+            if (countdownLabel != null)
+                countdownLabel.text = FormatRemainingTime(remainingTimeFloat);
+
+            if (currentTimeLabel != null)
+                currentTimeLabel.text = FormatCurrentTime(currentTimeFloat);
+
+            if (remainingTimeFloat <= 0f && isExamTimeLimited)
                 FailedExam();
         }
 
@@ -75,8 +80,11 @@ namespace FireValveSimulator
             examRunning = true;
             remainingTimeFloat = examDuration;
 
-            if (timer != null)
-                timer.text = FormatRemainingTime(remainingTimeFloat);
+            if (countdownLabel != null)
+                countdownLabel.text = FormatRemainingTime(remainingTimeFloat);
+
+            if (currentTimeLabel != null)
+                currentTimeLabel.text = FormatCurrentTime(currentTimeFloat);
 
             onExamStart?.Invoke();
             UnlockSystem();
@@ -103,8 +111,11 @@ namespace FireValveSimulator
             examRunning = false;
             remainingTimeFloat = examDuration;
 
-            if (timer != null)
-                timer.text = FormatRemainingTime(remainingTimeFloat);
+            if (countdownLabel != null)
+                countdownLabel.text = FormatRemainingTime(remainingTimeFloat);
+
+            if (currentTimeLabel != null)
+                currentTimeLabel.text = FormatCurrentTime(currentTimeFloat);
 
             ResetStepHelpers();
 
@@ -126,8 +137,11 @@ namespace FireValveSimulator
             examRunning = false;
             ResetStepHelpers();
 
-            if (timer != null)
-                timer.text = "";
+            if (countdownLabel != null)
+                countdownLabel.text = "";
+
+            if (currentTimeLabel != null)
+                currentTimeLabel.text = "";
         }
 
         public bool ApplyTimePenalty(float penaltySeconds)
@@ -144,8 +158,8 @@ namespace FireValveSimulator
 
             remainingTimeFloat = Mathf.Max(0f, remainingTimeFloat - penalty);
 
-            if (timer != null)
-                timer.text = FormatRemainingTime(remainingTimeFloat);
+            if (countdownLabel != null)
+                countdownLabel.text = FormatRemainingTime(remainingTimeFloat);
 
             Debug.Log($"Exam time penalty applied: -{penalty:0.#} seconds.");
 
@@ -211,6 +225,14 @@ namespace FireValveSimulator
             int wholeSeconds = totalCentiseconds / 100;
             int centiseconds = totalCentiseconds % 100;
             return $"{wholeSeconds:00}:{centiseconds:00}";
+        }
+
+        private string FormatCurrentTime(float timeSeconds)
+        {
+            int totalSeconds = Mathf.FloorToInt(timeSeconds);
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            return $"{minutes:00}:{seconds:00}";
         }
     }
 }
