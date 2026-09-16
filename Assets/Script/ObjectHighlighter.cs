@@ -1,32 +1,35 @@
-using UnityEngine;
-
-public class ObjectHighlighter : MonoBehaviour
+namespace FireValveSimulator
 {
-    private Material originalMaterial;
-    public Material highlightMaterial;
+    using UnityEngine;
 
-    private Renderer objectRenderer;
-
-    private void Awake()
+    public class ObjectHighlighter : MonoBehaviour
     {
-        objectRenderer = GetComponent<Renderer>();
-        if (objectRenderer != null)
-            originalMaterial = objectRenderer.material;
-    }
+        private Material originalMaterial;
+        public Material highlightMaterial;
 
-    public void Highlight()
-    {
-        if (objectRenderer == null || highlightMaterial == null)
-            return;
+        private Renderer objectRenderer;
 
-        objectRenderer.material = highlightMaterial;
-    }
+        private void Awake()
+        {
+            objectRenderer = GetComponent<Renderer>();
+            if (objectRenderer != null)
+                originalMaterial = objectRenderer.material;
+        }
 
-    public void RemoveHighlight()
-    {
-        if (objectRenderer == null || originalMaterial == null)
-            return;
+        public void Highlight()
+        {
+            if (objectRenderer == null || highlightMaterial == null)
+                return;
 
-        objectRenderer.material = originalMaterial;
+            objectRenderer.material = highlightMaterial;
+        }
+
+        public void RemoveHighlight()
+        {
+            if (objectRenderer == null || originalMaterial == null)
+                return;
+
+            objectRenderer.material = originalMaterial;
+        }
     }
 }

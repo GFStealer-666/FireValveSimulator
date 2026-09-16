@@ -1,40 +1,43 @@
-using UnityEngine;
-
-[RequireComponent(typeof(AudioSource))]
-public class StepFailureFeedback : MonoBehaviour
+namespace FireValveSimulator
 {
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip errorClip;
-    [SerializeField] private float minSecondsBetweenPlays = 0.15f;
+    using UnityEngine;
 
-    private float lastPlayTime = -999f;
-
-    private void Awake()
+    [RequireComponent(typeof(AudioSource))]
+    public class StepFailureFeedback : MonoBehaviour
     {
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
-    }
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip errorClip;
+        [SerializeField] private float minSecondsBetweenPlays = 0.15f;
 
-    private void OnEnable()
-    {
-        ActionOrderManager.OnStepFailed += PlayFailureFeedback;
-    }
+        private float lastPlayTime = -999f;
 
-    private void OnDisable()
-    {
-        ActionOrderManager.OnStepFailed -= PlayFailureFeedback;
-    }
+        private void Awake()
+        {
+            if (audioSource == null)
+                audioSource = GetComponent<AudioSource>();
+        }
 
-    public void PlayFailureFeedback()
-    {
-        if (audioSource == null || Time.unscaledTime - lastPlayTime < minSecondsBetweenPlays)
-            return;
+        private void OnEnable()
+        {
+            ActionOrderManager.OnStepFailed += PlayFailureFeedback;
+        }
 
-        lastPlayTime = Time.unscaledTime;
+        private void OnDisable()
+        {
+            ActionOrderManager.OnStepFailed -= PlayFailureFeedback;
+        }
 
-        if (errorClip != null)
-            audioSource.PlayOneShot(errorClip);
-        else
-            audioSource.Play();
+        public void PlayFailureFeedback()
+        {
+            if (audioSource == null || Time.unscaledTime - lastPlayTime < minSecondsBetweenPlays)
+                return;
+
+            lastPlayTime = Time.unscaledTime;
+
+            if (errorClip != null)
+                audioSource.PlayOneShot(errorClip);
+            else
+                audioSource.Play();
+        }
     }
 }

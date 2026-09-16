@@ -1,7 +1,10 @@
-public enum SimulatorMode
+namespace FireValveSimulator
 {
-    Menu,
-    Learning,
-    Training,
-    Exam
+    public enum SimulatorMode
+    {
+        Menu,
+        Learning,
+        Training,
+        Exam
+    }
 }

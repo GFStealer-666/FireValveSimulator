@@ -1,0 +1,25 @@
+{
+    "moduleId": "firevalvesimulator",
+    "title": "God",
+    "version": "1.0.0",
+    "unityVersion": "6000.3.13f1",
+    "sceneAddress": "firevalvesimulator_scene",
+    "downloadLabel": "module_firevalvesimulator",
+    "catalogFileName": "",
+    "remoteCatalogUrl": "",
+    "scriptsPackageFile": "firevalvesimulator_scripts_1.0.0.unitypackage",
+    "builtUtc": "2026-08-24 22:04:33",
+    "sdkType": "XRToolkit",
+    "catalogMode": "shared",
+    "namespaceName": "FireValveSimulator",
+    "serverBaseUrl": "https://poc-edusim.cheesetech.cloud/api/download",
+    "contentPackageFile": "firevalvesimulator_content_1.0.0.unitypackage",
+    "scenes": [
+        {
+            "scenePath": "Assets/Scenes/Scene_MainScene.unity",
+            "sceneName": "Scene_MainScene",
+            "address": "firevalvesimulator_scene",
+            "isMain": true
+        }
+    ]
+}

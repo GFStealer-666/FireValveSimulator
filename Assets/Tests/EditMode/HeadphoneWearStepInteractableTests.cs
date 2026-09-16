@@ -6,6 +6,35 @@ using UnityEngine;
 public class HeadphoneWearStepInteractableTests
 {
     [Test]
+    public void AutoConfigureXRComponentsAddsRequiredGrabSetup()
+    {
+        GameObject headphones = new GameObject("Headphones");
+
+        try
+        {
+            Type interactableType = Type.GetType("HeadphoneWearStepInteractable, Assembly-CSharp");
+            Assert.That(interactableType, Is.Not.Null);
+
+            Component interactable = headphones.AddComponent(interactableType);
+            MethodInfo configureMethod = interactableType.GetMethod("AutoConfigureXRComponents", BindingFlags.Instance | BindingFlags.Public);
+            Assert.That(configureMethod, Is.Not.Null);
+
+            configureMethod.Invoke(interactable, Array.Empty<object>());
+
+            Assert.That(headphones.GetComponent<Rigidbody>(), Is.Not.Null);
+            Assert.That(headphones.GetComponentsInChildren<Collider>(true), Has.Some.Matches<Collider>(collider => collider != null && !collider.isTrigger));
+
+            Type grabInteractableType = Type.GetType("UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable, Unity.XR.Interaction.Toolkit");
+            Assert.That(grabInteractableType, Is.Not.Null);
+            Assert.That(headphones.GetComponent(grabInteractableType), Is.Not.Null);
+        }
+        finally
+        {
+            UnityEngine.Object.DestroyImmediate(headphones);
+        }
+    }
+
+    [Test]
     public void IsWithinWearDistanceUsesConfiguredTarget()
     {
         GameObject target = new GameObject("Wear Target");

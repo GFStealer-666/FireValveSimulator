@@ -1,212 +1,215 @@
-using TMPro;
-using UnityEngine;
-using UnityEngine.Events;
-
-public class ExamManager : MonoBehaviour
+namespace FireValveSimulator
 {
-    public float examDuration = 300f;
-    private float remainingTimeFloat;
-    private bool examRunning = false;
+    using TMPro;
+    using UnityEngine;
+    using UnityEngine.Events;
 
-    [SerializeField] private TextMeshProUGUI timer;
-    private ActionOrderManager actionOrderManager;
-
-    public UnityEvent onExamStart;
-    public UnityEvent onExamFailed;
-    public UnityEvent onExamFinish;
-    public UnityEvent onResetExam;
-    public WaitTimer waitTimer;
-    public PressureSimulator pressureSimulator;
-
-    private void Awake()
+    public class ExamManager : MonoBehaviour
     {
-        actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
-    }
+        public float examDuration = 300f;
+        private float remainingTimeFloat;
+        private bool examRunning = false;
 
-    private void OnEnable()
-    {
-        ActionOrderManager.OnAllStepsCompleted += HandleExamCompleted;
-    }
+        [SerializeField] private TextMeshProUGUI timer;
+        private ActionOrderManager actionOrderManager;
 
-    private void OnDisable()
-    {
-        ActionOrderManager.OnAllStepsCompleted -= HandleExamCompleted;
-    }
+        public UnityEvent onExamStart;
+        public UnityEvent onExamFailed;
+        public UnityEvent onExamFinish;
+        public UnityEvent onResetExam;
+        public WaitTimer waitTimer;
+        public PressureSimulator pressureSimulator;
 
-    private void Start()
-    {
-        LockSystem();
-    }
-
-    private void Update()
-    {
-        if (!examRunning)
-            return;
-
-        remainingTimeFloat -= Time.deltaTime;
-
-        if (timer != null)
-            timer.text = FormatRemainingTime(remainingTimeFloat);
-
-        if (remainingTimeFloat <= 0f)
-            FailedExam();
-    }
-
-    public void StartExam()
-    {
-        if (actionOrderManager == null)
-            actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
-
-        if (actionOrderManager == null)
+        private void Awake()
         {
-            Debug.LogWarning("Exam cannot start because no ActionOrderManager was found.");
-            return;
+            actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
         }
 
-        Debug.Log("Exam Started!");
-        ResetStepHelpers();
-
-        actionOrderManager.SetExamMode(true);
-        actionOrderManager.ResetSequence();
-
-        examRunning = true;
-        remainingTimeFloat = examDuration;
-
-        if (timer != null)
-            timer.text = FormatRemainingTime(remainingTimeFloat);
-
-        onExamStart?.Invoke();
-        UnlockSystem();
-
-        if (waitTimer != null)
-            waitTimer.isActive = true;
-
-        if (pressureSimulator != null)
-            pressureSimulator.isActive = true;
-    }
-
-    public void LockSystem()
-    {
-    }
-
-    public void UnlockSystem()
-    {
-        foreach (UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable interactable in FindObjectsByType<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>(FindObjectsSortMode.None))
-            interactable.enabled = true;
-    }
-
-    public void ResetExam()
-    {
-        examRunning = false;
-        remainingTimeFloat = examDuration;
-
-        if (timer != null)
-            timer.text = FormatRemainingTime(remainingTimeFloat);
-
-        ResetStepHelpers();
-
-        if (actionOrderManager == null)
-            actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
-
-        if (actionOrderManager != null)
+        private void OnEnable()
         {
+            ActionOrderManager.OnAllStepsCompleted += HandleExamCompleted;
+        }
+
+        private void OnDisable()
+        {
+            ActionOrderManager.OnAllStepsCompleted -= HandleExamCompleted;
+        }
+
+        private void Start()
+        {
+            LockSystem();
+        }
+
+        private void Update()
+        {
+            if (!examRunning)
+                return;
+
+            remainingTimeFloat -= Time.deltaTime;
+
+            if (timer != null)
+                timer.text = FormatRemainingTime(remainingTimeFloat);
+
+            if (remainingTimeFloat <= 0f)
+                FailedExam();
+        }
+
+        public void StartExam()
+        {
+            if (actionOrderManager == null)
+                actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
+
+            if (actionOrderManager == null)
+            {
+                Debug.LogWarning("Exam cannot start because no ActionOrderManager was found.");
+                return;
+            }
+
+            Debug.Log("Exam Started!");
+            ResetStepHelpers();
+
+            actionOrderManager.SetExamMode(true);
             actionOrderManager.ResetSequence();
-            actionOrderManager.SetExamMode(false);
+
+            examRunning = true;
+            remainingTimeFloat = examDuration;
+
+            if (timer != null)
+                timer.text = FormatRemainingTime(remainingTimeFloat);
+
+            onExamStart?.Invoke();
+            UnlockSystem();
+
+            if (waitTimer != null)
+                waitTimer.isActive = true;
+
+            if (pressureSimulator != null)
+                pressureSimulator.isActive = true;
         }
 
-        LockSystem();
-        onResetExam?.Invoke();
-    }
-
-    public void StopExam()
-    {
-        examRunning = false;
-        ResetStepHelpers();
-
-        if (timer != null)
-            timer.text = "";
-    }
-
-    public bool ApplyTimePenalty(float penaltySeconds)
-    {
-        if (!examRunning)
+        public void LockSystem()
         {
-            Debug.LogWarning("Cannot apply exam time penalty because the exam is not running.");
-            return false;
         }
 
-        float penalty = Mathf.Max(0f, penaltySeconds);
-        if (penalty <= 0f)
+        public void UnlockSystem()
+        {
+            foreach (UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable interactable in FindObjectsByType<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>(FindObjectsSortMode.None))
+                interactable.enabled = true;
+        }
+
+        public void ResetExam()
+        {
+            examRunning = false;
+            remainingTimeFloat = examDuration;
+
+            if (timer != null)
+                timer.text = FormatRemainingTime(remainingTimeFloat);
+
+            ResetStepHelpers();
+
+            if (actionOrderManager == null)
+                actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
+
+            if (actionOrderManager != null)
+            {
+                actionOrderManager.ResetSequence();
+                actionOrderManager.SetExamMode(false);
+            }
+
+            LockSystem();
+            onResetExam?.Invoke();
+        }
+
+        public void StopExam()
+        {
+            examRunning = false;
+            ResetStepHelpers();
+
+            if (timer != null)
+                timer.text = "";
+        }
+
+        public bool ApplyTimePenalty(float penaltySeconds)
+        {
+            if (!examRunning)
+            {
+                Debug.LogWarning("Cannot apply exam time penalty because the exam is not running.");
+                return false;
+            }
+
+            float penalty = Mathf.Max(0f, penaltySeconds);
+            if (penalty <= 0f)
+                return true;
+
+            remainingTimeFloat = Mathf.Max(0f, remainingTimeFloat - penalty);
+
+            if (timer != null)
+                timer.text = FormatRemainingTime(remainingTimeFloat);
+
+            Debug.Log($"Exam time penalty applied: -{penalty:0.#} seconds.");
+
+            if (remainingTimeFloat <= 0f)
+            {
+                FailedExam();
+                return false;
+            }
+
             return true;
-
-        remainingTimeFloat = Mathf.Max(0f, remainingTimeFloat - penalty);
-
-        if (timer != null)
-            timer.text = FormatRemainingTime(remainingTimeFloat);
-
-        Debug.Log($"Exam time penalty applied: -{penalty:0.#} seconds.");
-
-        if (remainingTimeFloat <= 0f)
-        {
-            FailedExam();
-            return false;
         }
 
-        return true;
-    }
-
-    private void FailedExam()
-    {
-        if (!examRunning)
-            return;
-
-        Debug.Log("Time's up. Exam over.");
-        examRunning = false;
-        ResetStepHelpers();
-        onExamFailed?.Invoke();
-
-        if (actionOrderManager != null)
-            actionOrderManager.TriggerFailure();
-    }
-
-    private void HandleExamCompleted()
-    {
-        Debug.Log("Exam completed successfully.");
-        examRunning = false;
-        ResetStepHelpers();
-        onExamFinish?.Invoke();
-    }
-
-    private void ResetStepHelpers()
-    {
-        if (waitTimer != null)
+        private void FailedExam()
         {
-            waitTimer.isActive = false;
-            waitTimer.ResetTimer();
+            if (!examRunning)
+                return;
+
+            Debug.Log("Time's up. Exam over.");
+            examRunning = false;
+            ResetStepHelpers();
+            onExamFailed?.Invoke();
+
+            if (actionOrderManager != null)
+                actionOrderManager.TriggerFailure();
         }
 
-        if (pressureSimulator != null)
+        private void HandleExamCompleted()
         {
-            pressureSimulator.isActive = false;
-            pressureSimulator.ResetPressure();
-        }
-    }
-
-    private string FormatRemainingTime(float timeSeconds)
-    {
-        float clampedTime = Mathf.Max(0f, timeSeconds);
-
-        if (clampedTime >= 60f)
-        {
-            int totalSeconds = Mathf.CeilToInt(clampedTime);
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
-            return $"{minutes:00}:{seconds:00}";
+            Debug.Log("Exam completed successfully.");
+            examRunning = false;
+            ResetStepHelpers();
+            onExamFinish?.Invoke();
         }
 
-        int totalCentiseconds = Mathf.Clamp(Mathf.CeilToInt(clampedTime * 100f), 0, 5999);
-        int wholeSeconds = totalCentiseconds / 100;
-        int centiseconds = totalCentiseconds % 100;
-        return $"{wholeSeconds:00}:{centiseconds:00}";
+        private void ResetStepHelpers()
+        {
+            if (waitTimer != null)
+            {
+                waitTimer.isActive = false;
+                waitTimer.ResetTimer();
+            }
+
+            if (pressureSimulator != null)
+            {
+                pressureSimulator.isActive = false;
+                pressureSimulator.ResetPressure();
+            }
+        }
+
+        private string FormatRemainingTime(float timeSeconds)
+        {
+            float clampedTime = Mathf.Max(0f, timeSeconds);
+
+            if (clampedTime >= 60f)
+            {
+                int totalSeconds = Mathf.CeilToInt(clampedTime);
+                int minutes = totalSeconds / 60;
+                int seconds = totalSeconds % 60;
+                return $"{minutes:00}:{seconds:00}";
+            }
+
+            int totalCentiseconds = Mathf.Clamp(Mathf.CeilToInt(clampedTime * 100f), 0, 5999);
+            int wholeSeconds = totalCentiseconds / 100;
+            int centiseconds = totalCentiseconds % 100;
+            return $"{wholeSeconds:00}:{centiseconds:00}";
+        }
     }
 }

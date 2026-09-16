@@ -1,16 +1,19 @@
-using UnityEngine;
-
-public class ValveRotationLimiter : MonoBehaviour
+namespace FireValveSimulator
 {
-    public Transform valve;
-    public Vector3 rotationAxis = Vector3.forward;
+    using UnityEngine;
 
-    private void Update()
+    public class ValveRotationLimiter : MonoBehaviour
     {
-        if (valve == null)
-            return;
+        public Transform valve;
+        public Vector3 rotationAxis = Vector3.forward;
 
-        Vector3 currentEuler = valve.localEulerAngles;
-        valve.localEulerAngles = new Vector3(0f, 0f, currentEuler.z);
+        private void Update()
+        {
+            if (valve == null)
+                return;
+
+            Vector3 currentEuler = valve.localEulerAngles;
+            valve.localEulerAngles = new Vector3(0f, 0f, currentEuler.z);
+        }
     }
 }

@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <package android:name="CheeseTech.Edusim_Launcher" />
+    </queries>
+
+    <uses-feature
+        android:name="android.hardware.vr.headtracking"
+        android:required="true"
+        android:version="1" />
+
+    <application>
+        <meta-data
+            android:name="com.oculus.vr.focusaware"
+            android:value="true" />
+    </application>
+</manifest>

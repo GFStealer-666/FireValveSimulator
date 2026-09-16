@@ -1,52 +1,55 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class SceneReloader : MonoBehaviour
+namespace FireValveSimulator
 {
-    private const string MainMenuSceneName = "MainMenu";
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
 
-    public void ReloadCurrentScene()
+    public class SceneReloader : MonoBehaviour
     {
-        SimulatorModeManager modeManager = FindAnyObjectByType<SimulatorModeManager>();
-        if (modeManager != null)
+        private const string MainMenuSceneName = "MainMenu";
+
+        public void ReloadCurrentScene()
         {
-            modeManager.ResetCurrentMode();
-            return;
+            SimulatorModeManager modeManager = FindAnyObjectByType<SimulatorModeManager>();
+            if (modeManager != null)
+            {
+                modeManager.ResetCurrentMode();
+                return;
+            }
+
+            Scene currentScene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(currentScene.name);
         }
 
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.name);
-    }
-
-    public void ReloadSceneByName(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
+        public void ReloadSceneByName(string name)
         {
-            Debug.LogWarning("Cannot load a scene with an empty name.");
-            return;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Debug.LogWarning("Cannot load a scene with an empty name.");
+                return;
+            }
+
+            SimulatorModeManager modeManager = FindAnyObjectByType<SimulatorModeManager>();
+            if (modeManager != null && modeManager.TryStartModeBySceneName(name))
+                return;
+
+            SceneManager.LoadScene(name);
         }
 
-        SimulatorModeManager modeManager = FindAnyObjectByType<SimulatorModeManager>();
-        if (modeManager != null && modeManager.TryStartModeBySceneName(name))
-            return;
-
-        SceneManager.LoadScene(name);
-    }
-
-    public void LoadMainmenu()
-    {
-        SimulatorModeManager modeManager = FindAnyObjectByType<SimulatorModeManager>();
-        if (modeManager != null)
+        public void LoadMainmenu()
         {
-            modeManager.ShowMenu();
-            return;
+            SimulatorModeManager modeManager = FindAnyObjectByType<SimulatorModeManager>();
+            if (modeManager != null)
+            {
+                modeManager.ShowMenu();
+                return;
+            }
+
+            SceneManager.LoadScene(MainMenuSceneName);
         }
 
-        SceneManager.LoadScene(MainMenuSceneName);
-    }
-
-    public void Quit()
-    {
-        Application.Quit();
+        public void Quit()
+        {
+            Application.Quit();
+        }
     }
 }

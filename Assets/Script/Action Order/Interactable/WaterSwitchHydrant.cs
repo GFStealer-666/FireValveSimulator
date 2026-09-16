@@ -1,9 +1,12 @@
-using UnityEngine;
-
-public class WaterSwitchHydrant : MonoBehaviour
+namespace FireValveSimulator
 {
-    public void OnRotate()
+    using UnityEngine;
+
+    public class WaterSwitchHydrant : MonoBehaviour
     {
-        this.transform.Rotate(0, 0, -90);
+        public void OnRotate()
+        {
+            this.transform.Rotate(0, 0, -90);
+        }
     }
 }

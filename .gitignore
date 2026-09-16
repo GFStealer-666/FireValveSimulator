@@ -54,3 +54,5 @@ sysinfo.txt
 
 # Local Codex scratch files
 /.codex-temp/
+
+*.unitypackage

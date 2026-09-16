@@ -1,21 +1,24 @@
-using UnityEngine;
-
-public class UIFaceCamera : MonoBehaviour
+namespace FireValveSimulator
 {
-    public Transform cameraTransform;
-    public float rotationSpeed = 5f;
+    using UnityEngine;
 
-    void Update()
+    public class UIFaceCamera : MonoBehaviour
     {
-        Vector3 direction = cameraTransform.position - transform.position;
-        direction.y = 0;  // Lock to horizontal rotation
+        public Transform cameraTransform;
+        public float rotationSpeed = 5f;
 
-        if (direction != Vector3.zero)
+        void Update()
         {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            // Add this line to flip 180 degrees
-            targetRotation *= Quaternion.Euler(0, 180, 0);  
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            Vector3 direction = cameraTransform.position - transform.position;
+            direction.y = 0;  // Lock to horizontal rotation
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                // Add this line to flip 180 degrees
+                targetRotation *= Quaternion.Euler(0, 180, 0);  
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            }
         }
     }
 }
