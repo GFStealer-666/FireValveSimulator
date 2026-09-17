@@ -18,6 +18,10 @@ namespace FireValveSimulator
         [SerializeField] private bool restoreWhenStepBecomesCurrent = true;
 
         private XRGrabInteractable grabInteractable;
+        private Transform spawnParent;
+        private Vector3 spawnLocalPosition;
+        private Quaternion spawnLocalRotation;
+        private Vector3 spawnLocalScale;
         private bool isGrabbed;
         private bool isCompleted;
 
@@ -40,6 +44,7 @@ namespace FireValveSimulator
 
         private void Awake()
         {
+            CaptureSpawnPose();
             AutoConfigureXRComponents();
         }
 
@@ -48,12 +53,14 @@ namespace FireValveSimulator
             ResolveReferences();
             SubscribeGrabEvents();
             ActionOrderManager.OnCurrentStepChanged += HandleCurrentStepChanged;
+            ActionOrderManager.OnStepCompleted += HandleStepCompleted;
         }
 
         private void OnDisable()
         {
             UnsubscribeGrabEvents();
             ActionOrderManager.OnCurrentStepChanged -= HandleCurrentStepChanged;
+            ActionOrderManager.OnStepCompleted -= HandleStepCompleted;
         }
 
         private void Update()
@@ -83,6 +90,35 @@ namespace FireValveSimulator
                 actionOrderManager.RegisterAction(tag, ActionType.WearHeadphone);
 
             return true;
+        }
+
+        public void CompleteWearStepWithoutInteraction()
+        {
+            isCompleted = true;
+            isGrabbed = false;
+            SetWearObjectVisible(false);
+        }
+
+        public void RestoreToSpawnPose()
+        {
+            if (transform.parent != spawnParent)
+                transform.SetParent(spawnParent, false);
+
+            transform.localPosition = spawnLocalPosition;
+            transform.localRotation = spawnLocalRotation;
+            transform.localScale = spawnLocalScale;
+
+            Rigidbody body = GetComponent<Rigidbody>();
+            if (body != null)
+            {
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+                body.Sleep();
+            }
+
+            isCompleted = false;
+            isGrabbed = false;
+            SetWearObjectVisible(true);
         }
 
         public bool IsWithinWearDistance()
@@ -123,10 +159,16 @@ namespace FireValveSimulator
                 actionOrderManager = FindAnyObjectByType<ActionOrderManager>(FindObjectsInactive.Include);
 
             if (actionOrderManager != null && actionOrderManager.CurrentStepRequiresTag(tag))
-            {
-                isCompleted = false;
-                SetWearObjectVisible(true);
-            }
+                RestoreToSpawnPose();
+        }
+
+        private void HandleStepCompleted(ActionStep step)
+        {
+            if (step == null || step.actionType != ActionType.WearHeadphone || step.objectTags == null)
+                return;
+
+            if (System.Array.Exists(step.objectTags, objectTag => objectTag == tag))
+                CompleteWearStepWithoutInteraction();
         }
 
         private bool CanCompleteCurrentStep()
@@ -153,6 +195,14 @@ namespace FireValveSimulator
 
             if (grabInteractable == null)
                 grabInteractable = GetComponent<XRGrabInteractable>();
+        }
+
+        private void CaptureSpawnPose()
+        {
+            spawnParent = transform.parent;
+            spawnLocalPosition = transform.localPosition;
+            spawnLocalRotation = transform.localRotation;
+            spawnLocalScale = transform.localScale;
         }
 
         private Transform ResolveWearTarget()

@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepName: Wait 30 minutes
   objectTags: []
+  hintObjectTags:
+  - DieselFirePumpSwitchAuto
   actionType: 7
   pressureTarget: 0
   waitDuration: 30

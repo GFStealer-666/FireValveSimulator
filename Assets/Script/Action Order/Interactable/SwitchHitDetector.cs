@@ -38,6 +38,8 @@ namespace FireValveSimulator
         private XRHandSubsystem handSubsystem;
         private XROrigin xrOrigin;
 
+        public bool IsTriggered => isTriggered;
+
         private void Awake()
         {
             actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
@@ -68,6 +70,11 @@ namespace FireValveSimulator
         public void ReTrigger()
         {
             isTriggered = false;
+        }
+
+        public void RestoreTriggeredState(bool triggered)
+        {
+            isTriggered = triggered;
         }
 
         private void TryCompleteFromCollider(Collider other)
@@ -108,9 +115,9 @@ namespace FireValveSimulator
             }
 
             Debug.Log($"Switch activated. Action: {switchActionType}");
-            actionOrderManager.RegisterAction(tag, switchActionType);
-            onSwitchHit?.Invoke();
             isTriggered = true;
+            onSwitchHit?.Invoke();
+            actionOrderManager.RegisterAction(tag, switchActionType);
         }
 
         private bool IsActivatorCollider(Collider other)

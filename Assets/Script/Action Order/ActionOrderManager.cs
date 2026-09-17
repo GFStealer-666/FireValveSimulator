@@ -2,12 +2,30 @@ namespace FireValveSimulator
 {
     using System;
     using System.Collections.Generic;
+    using EPOOutline;
     using TMPro;
     using UnityEngine;
     using UnityEngine.Events;
 
     public class ActionOrderManager : MonoBehaviour
     {
+        [Serializable]
+        public class StepOutlineTargetBinding
+        {
+            [Tooltip("Optional. For multi-object steps, use the object's completion tag so its outline turns off as soon as that object is completed.")]
+            public string completionTag;
+
+            [Tooltip("The Outlinable component on the visible valve, switch, panel, or tool.")]
+            public Outlinable target;
+        }
+
+        [Serializable]
+        public class StepOutlineBinding
+        {
+            public ActionStep step;
+            public List<StepOutlineTargetBinding> targets = new List<StepOutlineTargetBinding>();
+        }
+
         public List<ActionStep> orderedSteps;
         private int currentStepIndex = 0;
         [SerializeField] private ActionStep currentStep;
@@ -20,16 +38,29 @@ namespace FireValveSimulator
         public UnityEvent OnSubStepCompleted;
 
         public static event Action OnAllStepsCompleted, OnStepFailed, OnStepSuccess;
+        public static event Action<ActionStep> OnStepCompleted;
         public static event Action<ActionStep, int> OnCurrentStepChanged;
         public event Action<ActionStep, int> CurrentStepChanged;
 
         private readonly List<ObjectHighlighter> activeHighlighters = new List<ObjectHighlighter>();
+        private readonly List<Outlinable> activeStepOutlines = new List<Outlinable>();
+
+        [Header("Learning / Training Outline Hints")]
+        [Tooltip("Optional explicit Inspector mapping. When a step has no configured target, tag-based automatic highlighting is used as a fallback.")]
+        [SerializeField] private List<StepOutlineBinding> stepOutlineBindings = new List<StepOutlineBinding>();
+
+        private readonly Dictionary<int, StepStateSnapshot> stepStateSnapshots = new Dictionary<int, StepStateSnapshot>();
         public bool isExam = false;
         public TMP_Text stepText;
         public int CurrentStepIndex => sequenceActive ? currentStepIndex : -1;
         public int StepCount => orderedSteps != null ? orderedSteps.Count : 0;
 
-        [ContextMenu("Debug/Complete Current Step")]
+        private void Awake()
+        {
+            DisableAllConfiguredOutlines();
+        }
+
+        [ContextMenu("Debug/Progress To Next Step")]
         public void CompleteCurrentStepFromContextMenu()
         {
             SkipCurrentStep();
@@ -43,6 +74,11 @@ namespace FireValveSimulator
         public bool CanSkipCurrentStep()
         {
             return Application.isPlaying && sequenceActive && currentStep != null;
+        }
+
+        public bool CanGoToPreviousStep()
+        {
+            return Application.isPlaying && sequenceActive && currentStep != null && currentStepIndex > 0;
         }
 
         public bool TrySkipCurrentStep()
@@ -67,6 +103,53 @@ namespace FireValveSimulator
 
             Debug.Log($"Skipping step {currentStepIndex + 1}: {currentStep.stepName}");
             CompleteStep();
+            return true;
+        }
+
+        [ContextMenu("Debug/Reverse To Previous Step")]
+        public void PreviousStep()
+        {
+            TryGoToPreviousStep();
+        }
+
+        public bool TryGoToPreviousStep()
+        {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning("Previous Step only works in Play Mode.");
+                return false;
+            }
+
+            if (!sequenceActive || currentStep == null)
+            {
+                Debug.LogWarning("Cannot return to the previous step because the sequence is not active.");
+                return false;
+            }
+
+            if (currentStepIndex <= 0)
+            {
+                Debug.LogWarning("Cannot return to the previous step because the sequence is already at step 1.");
+                return false;
+            }
+
+            int stepBeingLeft = currentStepIndex;
+            int previousStepIndex = currentStepIndex - 1;
+
+            RestoreStepState(stepBeingLeft);
+            RestoreStepState(previousStepIndex);
+            RemoveStepSnapshotsFrom(previousStepIndex);
+            ResetTransientStepHelpers();
+
+            currentStepIndex = previousStepIndex;
+            currentStep = orderedSteps[currentStepIndex];
+            completedTagsInCurrentStep.Clear();
+
+            UpdateCurrentStepUI();
+            HighlightCurrentStepObjects();
+            NotifyCurrentStepChanged();
+            CaptureCurrentStepState();
+
+            Debug.Log($"Returned to step {currentStepIndex + 1}: {currentStep.stepName}");
             return true;
         }
 
@@ -136,6 +219,8 @@ namespace FireValveSimulator
 
         public void InitializeSequence()
         {
+            stepStateSnapshots.Clear();
+
             if (!HasSteps())
             {
                 sequenceActive = false;
@@ -155,6 +240,7 @@ namespace FireValveSimulator
                 HighlightCurrentStepObjects();
 
             NotifyCurrentStepChanged();
+            CaptureCurrentStepState();
         }
 
         public void RegisterAction(string objectTag, ActionType actionType)
@@ -191,6 +277,8 @@ namespace FireValveSimulator
 
                 if (completedTagsInCurrentStep.Count >= currentStep.objectTags.Length)
                     CompleteStep();
+                else if (!isExam)
+                    HighlightCurrentStepObjects();
             }
             else
             {
@@ -232,6 +320,7 @@ namespace FireValveSimulator
             sequenceActive = true;
             currentStepIndex = 0;
             completedTagsInCurrentStep.Clear();
+            stepStateSnapshots.Clear();
 
             if (!HasSteps())
             {
@@ -251,6 +340,7 @@ namespace FireValveSimulator
 
             UpdateCurrentStepUI();
             NotifyCurrentStepChanged();
+            CaptureCurrentStepState();
         }
 
         public void ResetToIdle()
@@ -258,6 +348,7 @@ namespace FireValveSimulator
             sequenceActive = false;
             currentStepIndex = 0;
             completedTagsInCurrentStep.Clear();
+            stepStateSnapshots.Clear();
             currentStep = null;
             ClearHighlights();
 
@@ -319,19 +410,27 @@ namespace FireValveSimulator
             ClearHighlights();
 
             ActionStep step = GetCurrentStep();
-            if (step == null || step.objectTags == null)
+            if (step == null)
                 return;
 
-            foreach (string tag in step.objectTags)
+            if (HighlightConfiguredTargets(step))
+                return;
+
+            if (step.HintObjectTags == null)
+                return;
+
+            foreach (string tag in step.HintObjectTags)
             {
-                if (string.IsNullOrEmpty(tag))
+                if (string.IsNullOrEmpty(tag) || completedTagsInCurrentStep.Contains(tag))
                     continue;
 
                 GameObject[] objs = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject obj in objs)
                 {
-                    ObjectHighlighter highlighter = obj.GetComponentInChildren<ObjectHighlighter>();
-                    if (highlighter != null)
+                    ObjectHighlighter highlighter = FindOrCreateHighlighter(obj);
+                    if (highlighter != null &&
+                        highlighter.HasHighlightTarget() &&
+                        !activeHighlighters.Contains(highlighter))
                     {
                         highlighter.Highlight();
                         activeHighlighters.Add(highlighter);
@@ -342,7 +441,9 @@ namespace FireValveSimulator
 
         private void CompleteStep()
         {
-            Debug.Log($"Step {currentStep.stepName} completed!");
+            ActionStep completedStep = currentStep;
+            Debug.Log($"Step {completedStep.stepName} completed!");
+            OnStepCompleted?.Invoke(completedStep);
             onStepSuccess?.Invoke();
             OnStepSuccess?.Invoke();
 
@@ -366,11 +467,118 @@ namespace FireValveSimulator
                 UpdateCurrentStepUI();
                 HighlightCurrentStepObjects();
                 NotifyCurrentStepChanged();
+                CaptureCurrentStepState();
             }
+        }
+
+        private bool HighlightConfiguredTargets(ActionStep step)
+        {
+            if (stepOutlineBindings == null)
+                return false;
+
+            foreach (StepOutlineBinding binding in stepOutlineBindings)
+            {
+                if (binding == null || binding.step != step || binding.targets == null)
+                    continue;
+
+                bool hasUsableTarget = false;
+                foreach (StepOutlineTargetBinding targetBinding in binding.targets)
+                {
+                    if (targetBinding == null || targetBinding.target == null)
+                        continue;
+
+                    hasUsableTarget = true;
+
+                    if (!string.IsNullOrEmpty(targetBinding.completionTag) &&
+                        completedTagsInCurrentStep.Contains(targetBinding.completionTag))
+                    {
+                        targetBinding.target.enabled = false;
+                        continue;
+                    }
+
+                    targetBinding.target.enabled = true;
+                    if (!activeStepOutlines.Contains(targetBinding.target))
+                        activeStepOutlines.Add(targetBinding.target);
+                }
+
+                return hasUsableTarget;
+            }
+
+            return false;
+        }
+
+        private static ObjectHighlighter FindOrCreateHighlighter(GameObject taggedObject)
+        {
+            if (taggedObject == null)
+                return null;
+
+            ObjectHighlighter highlighter = taggedObject.GetComponentInChildren<ObjectHighlighter>(true);
+            if (highlighter != null)
+                return highlighter;
+
+            Transform candidate = taggedObject.transform;
+            while (candidate != null)
+            {
+                highlighter = candidate.GetComponent<ObjectHighlighter>();
+                if (highlighter != null)
+                    return highlighter;
+
+                if (candidate.GetComponentInChildren<Renderer>(true) != null)
+                    return candidate.gameObject.AddComponent<ObjectHighlighter>();
+
+                candidate = candidate.parent;
+            }
+
+            Debug.LogWarning($"No renderer was found for highlighted object '{taggedObject.name}' ({taggedObject.tag}).");
+            return null;
+        }
+
+        private void CaptureCurrentStepState()
+        {
+            if (!sequenceActive || currentStep == null || currentStepIndex < 0)
+                return;
+
+            stepStateSnapshots[currentStepIndex] = StepStateSnapshot.Capture(currentStep);
+        }
+
+        private void RestoreStepState(int stepIndex)
+        {
+            if (stepStateSnapshots.TryGetValue(stepIndex, out StepStateSnapshot snapshot))
+                snapshot.Restore();
+        }
+
+        private void RemoveStepSnapshotsFrom(int firstStepIndex)
+        {
+            List<int> indexesToRemove = new List<int>();
+            foreach (int index in stepStateSnapshots.Keys)
+            {
+                if (index >= firstStepIndex)
+                    indexesToRemove.Add(index);
+            }
+
+            foreach (int index in indexesToRemove)
+                stepStateSnapshots.Remove(index);
+        }
+
+        private static void ResetTransientStepHelpers()
+        {
+            foreach (WaitTimer timer in FindObjectsByType<WaitTimer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                timer.ResetTimer();
+
+            foreach (PressureSimulator pressure in FindObjectsByType<PressureSimulator>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                pressure.ResetPressure();
         }
 
         private void ClearHighlights()
         {
+            foreach (Outlinable outline in activeStepOutlines)
+            {
+                if (outline != null)
+                    outline.enabled = false;
+            }
+
+            activeStepOutlines.Clear();
+
             foreach (ObjectHighlighter highlighter in activeHighlighters)
             {
                 if (highlighter != null)
@@ -378,6 +586,26 @@ namespace FireValveSimulator
             }
 
             activeHighlighters.Clear();
+        }
+
+        private void DisableAllConfiguredOutlines()
+        {
+            if (stepOutlineBindings == null)
+                return;
+
+            foreach (StepOutlineBinding binding in stepOutlineBindings)
+            {
+                if (binding == null || binding.targets == null)
+                    continue;
+
+                foreach (StepOutlineTargetBinding targetBinding in binding.targets)
+                {
+                    if (targetBinding != null && targetBinding.target != null)
+                        targetBinding.target.enabled = false;
+                }
+            }
+
+            activeStepOutlines.Clear();
         }
 
         private void TriggerStepFailed()
@@ -396,6 +624,332 @@ namespace FireValveSimulator
         private bool HasSteps()
         {
             return orderedSteps != null && orderedSteps.Count > 0;
+        }
+
+        private sealed class StepStateSnapshot
+        {
+            private readonly List<TransformState> transformStates = new List<TransformState>();
+            private readonly List<GameObjectState> gameObjectStates = new List<GameObjectState>();
+            private readonly List<RendererState> rendererStates = new List<RendererState>();
+            private readonly List<ColliderState> colliderStates = new List<ColliderState>();
+            private readonly List<RigidbodyState> rigidbodyStates = new List<RigidbodyState>();
+            private readonly List<ValveState> valveStates = new List<ValveState>();
+            private readonly List<SwitchState> switchStates = new List<SwitchState>();
+            private readonly List<KnobTrackerState> knobTrackerStates = new List<KnobTrackerState>();
+            private readonly List<TwoHandValveRotator> valveRotators = new List<TwoHandValveRotator>();
+
+            public static StepStateSnapshot Capture(ActionStep step)
+            {
+                StepStateSnapshot snapshot = new StepStateSnapshot();
+                if (step == null || step.objectTags == null)
+                    return snapshot;
+
+                HashSet<GameObject> roots = new HashSet<GameObject>();
+                foreach (string objectTag in step.objectTags)
+                {
+                    if (string.IsNullOrEmpty(objectTag))
+                        continue;
+
+                    foreach (GameObject candidate in Resources.FindObjectsOfTypeAll<GameObject>())
+                    {
+                        if (candidate == null || !candidate.scene.IsValid() || !candidate.scene.isLoaded)
+                            continue;
+
+                        if (candidate.CompareTag(objectTag))
+                            roots.Add(candidate);
+                    }
+                }
+
+                snapshot.CaptureRootsAndEventTargets(roots);
+                return snapshot;
+            }
+
+            public void Restore()
+            {
+                foreach (TransformState state in transformStates)
+                    state.Restore();
+
+                foreach (RendererState state in rendererStates)
+                    state.Restore();
+
+                foreach (ColliderState state in colliderStates)
+                    state.Restore();
+
+                foreach (RigidbodyState state in rigidbodyStates)
+                    state.Restore();
+
+                foreach (ValveState state in valveStates)
+                    state.Restore();
+
+                foreach (SwitchState state in switchStates)
+                    state.Restore();
+
+                foreach (KnobTrackerState state in knobTrackerStates)
+                    state.Restore();
+
+                foreach (TwoHandValveRotator valveRotator in valveRotators)
+                {
+                    if (valveRotator != null)
+                        valveRotator.ResetProgress();
+                }
+
+                // Restore children first so enabling a parent exposes the complete captured hierarchy.
+                gameObjectStates.Sort((left, right) => right.HierarchyDepth.CompareTo(left.HierarchyDepth));
+                foreach (GameObjectState state in gameObjectStates)
+                    state.Restore();
+            }
+
+            private void CaptureRootsAndEventTargets(HashSet<GameObject> roots)
+            {
+                Queue<GameObject> pendingRoots = new Queue<GameObject>(roots);
+                HashSet<GameObject> discoveredRoots = new HashSet<GameObject>(roots);
+
+                while (pendingRoots.Count > 0)
+                {
+                    GameObject root = pendingRoots.Dequeue();
+                    if (root == null)
+                        continue;
+
+                    foreach (SwitchHitDetector detector in root.GetComponentsInChildren<SwitchHitDetector>(true))
+                        AddPersistentTargets(detector.onSwitchHit, pendingRoots, discoveredRoots);
+
+                    foreach (ValveStateTracker valve in root.GetComponentsInChildren<ValveStateTracker>(true))
+                        AddPersistentTargets(valve.OnValveRotate, pendingRoots, discoveredRoots);
+                }
+
+                HashSet<Transform> capturedTransforms = new HashSet<Transform>();
+                foreach (GameObject root in discoveredRoots)
+                    CaptureTransformTree(root.transform, capturedTransforms);
+            }
+
+            private static void AddPersistentTargets(
+                UnityEventBase unityEvent,
+                Queue<GameObject> pendingRoots,
+                HashSet<GameObject> discoveredRoots)
+            {
+                if (unityEvent == null)
+                    return;
+
+                for (int i = 0; i < unityEvent.GetPersistentEventCount(); i++)
+                {
+                    UnityEngine.Object target = unityEvent.GetPersistentTarget(i);
+                    GameObject targetObject = target as GameObject;
+                    if (targetObject == null && target is Component component)
+                        targetObject = component.gameObject;
+
+                    if (targetObject == null || !targetObject.scene.IsValid() || !discoveredRoots.Add(targetObject))
+                        continue;
+
+                    pendingRoots.Enqueue(targetObject);
+                }
+            }
+
+            private void CaptureTransformTree(Transform transform, HashSet<Transform> capturedTransforms)
+            {
+                if (transform == null || !capturedTransforms.Add(transform))
+                    return;
+
+                GameObject gameObject = transform.gameObject;
+                transformStates.Add(new TransformState(transform));
+                gameObjectStates.Add(new GameObjectState(gameObject));
+
+                foreach (Renderer renderer in gameObject.GetComponents<Renderer>())
+                    rendererStates.Add(new RendererState(renderer));
+
+                foreach (Collider collider in gameObject.GetComponents<Collider>())
+                    colliderStates.Add(new ColliderState(collider));
+
+                foreach (Rigidbody body in gameObject.GetComponents<Rigidbody>())
+                    rigidbodyStates.Add(new RigidbodyState(body));
+
+                foreach (ValveStateTracker valve in gameObject.GetComponents<ValveStateTracker>())
+                    valveStates.Add(new ValveState(valve));
+
+                foreach (SwitchHitDetector detector in gameObject.GetComponents<SwitchHitDetector>())
+                    switchStates.Add(new SwitchState(detector));
+
+                foreach (ValveRotationTracker tracker in gameObject.GetComponents<ValveRotationTracker>())
+                    knobTrackerStates.Add(new KnobTrackerState(tracker));
+
+                foreach (TwoHandValveRotator valveRotator in gameObject.GetComponents<TwoHandValveRotator>())
+                    valveRotators.Add(valveRotator);
+
+                foreach (Transform child in transform)
+                    CaptureTransformTree(child, capturedTransforms);
+            }
+
+            private sealed class TransformState
+            {
+                private readonly Transform transform;
+                private readonly Vector3 localPosition;
+                private readonly Quaternion localRotation;
+                private readonly Vector3 localScale;
+
+                public TransformState(Transform transform)
+                {
+                    this.transform = transform;
+                    localPosition = transform.localPosition;
+                    localRotation = transform.localRotation;
+                    localScale = transform.localScale;
+                }
+
+                public void Restore()
+                {
+                    if (transform == null)
+                        return;
+
+                    transform.localPosition = localPosition;
+                    transform.localRotation = localRotation;
+                    transform.localScale = localScale;
+                }
+            }
+
+            private sealed class GameObjectState
+            {
+                private readonly GameObject gameObject;
+                private readonly bool activeSelf;
+
+                public int HierarchyDepth { get; }
+
+                public GameObjectState(GameObject gameObject)
+                {
+                    this.gameObject = gameObject;
+                    activeSelf = gameObject.activeSelf;
+
+                    int hierarchyDepth = 0;
+                    Transform current = gameObject.transform;
+                    while (current != null)
+                    {
+                        hierarchyDepth++;
+                        current = current.parent;
+                    }
+
+                    HierarchyDepth = hierarchyDepth;
+                }
+
+                public void Restore()
+                {
+                    if (gameObject != null)
+                        gameObject.SetActive(activeSelf);
+                }
+            }
+
+            private sealed class RendererState
+            {
+                private readonly Renderer renderer;
+                private readonly bool enabled;
+
+                public RendererState(Renderer renderer)
+                {
+                    this.renderer = renderer;
+                    enabled = renderer.enabled;
+                }
+
+                public void Restore()
+                {
+                    if (renderer != null)
+                        renderer.enabled = enabled;
+                }
+            }
+
+            private sealed class ColliderState
+            {
+                private readonly Collider collider;
+                private readonly bool enabled;
+
+                public ColliderState(Collider collider)
+                {
+                    this.collider = collider;
+                    enabled = collider.enabled;
+                }
+
+                public void Restore()
+                {
+                    if (collider != null)
+                        collider.enabled = enabled;
+                }
+            }
+
+            private sealed class RigidbodyState
+            {
+                private readonly Rigidbody rigidbody;
+                private readonly Vector3 linearVelocity;
+                private readonly Vector3 angularVelocity;
+
+                public RigidbodyState(Rigidbody rigidbody)
+                {
+                    this.rigidbody = rigidbody;
+                    linearVelocity = rigidbody.linearVelocity;
+                    angularVelocity = rigidbody.angularVelocity;
+                }
+
+                public void Restore()
+                {
+                    if (rigidbody == null)
+                        return;
+
+                    rigidbody.linearVelocity = linearVelocity;
+                    rigidbody.angularVelocity = angularVelocity;
+                    if (linearVelocity.sqrMagnitude <= Mathf.Epsilon && angularVelocity.sqrMagnitude <= Mathf.Epsilon)
+                        rigidbody.Sleep();
+                }
+            }
+
+            private sealed class ValveState
+            {
+                private readonly ValveStateTracker valve;
+                private readonly ValveStateTracker.ValveState state;
+
+                public ValveState(ValveStateTracker valve)
+                {
+                    this.valve = valve;
+                    state = valve.currentState;
+                }
+
+                public void Restore()
+                {
+                    if (valve != null)
+                        valve.SetStateWithoutNotification(state);
+                }
+            }
+
+            private sealed class SwitchState
+            {
+                private readonly SwitchHitDetector detector;
+                private readonly bool wasTriggered;
+
+                public SwitchState(SwitchHitDetector detector)
+                {
+                    this.detector = detector;
+                    wasTriggered = detector.IsTriggered;
+                }
+
+                public void Restore()
+                {
+                    if (detector != null)
+                        detector.RestoreTriggeredState(wasTriggered);
+                }
+            }
+
+            private sealed class KnobTrackerState
+            {
+                private readonly ValveRotationTracker tracker;
+                private readonly float knobValue;
+                private readonly bool wasEnabled;
+
+                public KnobTrackerState(ValveRotationTracker tracker)
+                {
+                    this.tracker = tracker;
+                    knobValue = tracker.CurrentKnobValue;
+                    wasEnabled = tracker.enabled;
+                }
+
+                public void Restore()
+                {
+                    if (tracker != null)
+                        tracker.RestoreForPreviousStep(knobValue, wasEnabled);
+                }
+            }
         }
     }
 }

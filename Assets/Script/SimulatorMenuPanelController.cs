@@ -58,6 +58,16 @@ namespace FireValveSimulator
         [SerializeField] private GameObject skipStepButtonRoot;
         [SerializeField] private Button skipStepButton;
 
+        [Header("Learning/Training Previous Button")]
+        [SerializeField] private GameObject previousStepButtonRoot;
+        [SerializeField] private Button previousStepButton;
+
+        [Header("Current Step Label")]
+        [Tooltip("The label displayed in CurrentStepPanel. It is resolved automatically when left unassigned.")]
+        [SerializeField] private TMP_Text currentStepLabel;
+        [Tooltip("{0} is replaced with the one-based current step number.")]
+        [SerializeField] private string currentStepLabelFormat = "Current Step : {0}";
+
         private void Awake()
         {
     #if UNITY_EDITOR
@@ -75,6 +85,8 @@ namespace FireValveSimulator
 
             ResolveButtonReferences();
             EnsureSkipStepButtonExists();
+            EnsurePreviousStepButtonExists();
+            ResolveCurrentStepLabel();
             ConfigureHoldToConfirmButtons();
         }
 
@@ -104,6 +116,8 @@ namespace FireValveSimulator
             ResolveDefaultSpinnerPrefabInEditor();
             ResolveButtonReferences();
             EnsureSkipStepButtonExists();
+            EnsurePreviousStepButtonExists();
+            ResolveCurrentStepLabel();
             ConfigureHoldToConfirmButtons();
             EditorUtility.SetDirty(this);
             EditorSceneManager.MarkSceneDirty(gameObject.scene);
@@ -114,6 +128,7 @@ namespace FireValveSimulator
         {
             SimulatorModeManager.OnModeChanged += HandleModeChanged;
             ActionOrderManager.OnAllStepsCompleted += HandleAllStepsCompleted;
+            ActionOrderManager.OnCurrentStepChanged += HandleCurrentStepChanged;
 
             if (wireButtonListenersOnEnable)
                 WireButtonListeners();
@@ -125,6 +140,7 @@ namespace FireValveSimulator
         {
             SimulatorModeManager.OnModeChanged -= HandleModeChanged;
             ActionOrderManager.OnAllStepsCompleted -= HandleAllStepsCompleted;
+            ActionOrderManager.OnCurrentStepChanged -= HandleCurrentStepChanged;
 
             if (wireButtonListenersOnEnable)
                 UnwireButtonListeners();
@@ -137,12 +153,15 @@ namespace FireValveSimulator
 
             RefreshReturnToMenuButtonVisibility();
             RefreshSkipStepButtonVisibility();
+            RefreshPreviousStepButtonVisibility();
+            RefreshCurrentStepLabel();
         }
 
         public void ShowMainMenu()
         {
             SetReturnToMenuButtonVisible(false);
             SetSkipStepButtonVisible(false);
+            SetPreviousStepButtonVisible(false);
             SetPanels(mainMenu: true);
         }
 
@@ -151,6 +170,7 @@ namespace FireValveSimulator
         {
             SetReturnToMenuButtonVisible(false);
             SetSkipStepButtonVisible(false);
+            SetPreviousStepButtonVisible(false);
             SetPanels(complete: true);
         }
 
@@ -217,6 +237,7 @@ namespace FireValveSimulator
             Debug.LogWarning("Cannot return through SimulatorModeManager because it is not assigned. Showing the menu panels directly.");
             SetReturnToMenuButtonVisible(false);
             SetSkipStepButtonVisible(false);
+            SetPreviousStepButtonVisible(false);
             ShowMainMenu();
         }
 
@@ -234,6 +255,24 @@ namespace FireValveSimulator
                 SetSkipStepButtonVisible(IsSkipStepMode(modeManager.CurrentMode));
             else
                 SetSkipStepButtonVisible(false);
+        }
+
+        public void RefreshPreviousStepButtonVisibility()
+        {
+            bool visible = modeManager != null && IsPreviousStepMode(modeManager.CurrentMode);
+            SetPreviousStepButtonVisible(visible);
+
+            if (previousStepButton != null)
+                previousStepButton.interactable = visible && actionOrderManager != null && actionOrderManager.CanGoToPreviousStep();
+        }
+
+        public void RefreshCurrentStepLabel()
+        {
+            if (actionOrderManager == null)
+                actionOrderManager = FindAnyObjectByType<ActionOrderManager>(FindObjectsInactive.Include);
+
+            int stepIndex = actionOrderManager != null ? actionOrderManager.CurrentStepIndex : -1;
+            UpdateCurrentStepLabel(stepIndex);
         }
 
         public void SkipCurrentStep()
@@ -285,6 +324,29 @@ namespace FireValveSimulator
             actionOrderManager.SkipCurrentStep();
         }
 
+        public void GoToPreviousStep()
+        {
+            if (actionOrderManager == null)
+                actionOrderManager = FindAnyObjectByType<ActionOrderManager>(FindObjectsInactive.Include);
+
+            if (modeManager == null)
+                modeManager = FindAnyObjectByType<SimulatorModeManager>(FindObjectsInactive.Include);
+
+            if (actionOrderManager == null)
+            {
+                Debug.LogWarning("Cannot return to the previous step because no ActionOrderManager was found.");
+                return;
+            }
+
+            if (modeManager == null || !IsPreviousStepMode(modeManager.CurrentMode))
+            {
+                Debug.LogWarning("Cannot return to the previous step in the current simulator mode.");
+                return;
+            }
+
+            actionOrderManager.PreviousStep();
+        }
+
         [ContextMenu("Setup/Resolve Button References")]
         public void ResolveButtonReferences()
         {
@@ -329,6 +391,66 @@ namespace FireValveSimulator
 
             if (skipStepButtonRoot == null && skipStepButton != null)
                 skipStepButtonRoot = skipStepButton.gameObject;
+
+            if (previousStepButton == null)
+            {
+                GameObject previousSearchRoot = previousStepButtonRoot;
+                if (previousSearchRoot == null && skipStepButton != null && skipStepButton.transform.parent != null)
+                    previousSearchRoot = skipStepButton.transform.parent.gameObject;
+                if (previousSearchRoot == null)
+                    previousSearchRoot = returnToMenuButtonRoot;
+
+                previousStepButton = FindButtonInPanel(
+                    previousSearchRoot,
+                    "[Action] BackButton",
+                    "BackButton",
+                    "PreviousStepButton",
+                    "Previous Step",
+                    "PreviousButton",
+                    "BackStepButton");
+            }
+
+            if (previousStepButtonRoot == null && previousStepButton != null)
+                previousStepButtonRoot = previousStepButton.gameObject;
+        }
+
+        [ContextMenu("Setup/Resolve Current Step Label")]
+        public void ResolveCurrentStepLabel()
+        {
+            if (currentStepLabel != null)
+                return;
+
+            GameObject searchRoot = skipStepButtonRoot;
+            if (skipStepButton != null &&
+                (searchRoot == null || searchRoot.transform == skipStepButton.transform) &&
+                skipStepButton.transform.parent != null)
+            {
+                searchRoot = skipStepButton.transform.parent.gameObject;
+            }
+
+            if (searchRoot == null)
+                return;
+
+            TMP_Text fallbackLabel = null;
+            foreach (TMP_Text label in searchRoot.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (label == null || IsButtonLabel(label, skipStepButton) || IsButtonLabel(label, previousStepButton))
+                    continue;
+
+                if (fallbackLabel == null)
+                    fallbackLabel = label;
+
+                bool nameMatches = ContainsIgnoreCase(label.name, "current") && ContainsIgnoreCase(label.name, "step");
+                bool textMatches = ContainsIgnoreCase(label.text, "current") && ContainsIgnoreCase(label.text, "step");
+                bool knownSceneLabel = label.name == "[Info] TittleLabel";
+                if (nameMatches || textMatches || knownSceneLabel)
+                {
+                    currentStepLabel = label;
+                    return;
+                }
+            }
+
+            currentStepLabel = fallbackLabel;
         }
 
         [ContextMenu("Setup/Create Skip Step Button If Missing")]
@@ -422,6 +544,105 @@ namespace FireValveSimulator
                 WireButton(skipStepButton, SkipCurrentStep);
         }
 
+        [ContextMenu("Setup/Create Previous Step Button If Missing")]
+        public void EnsurePreviousStepButtonExists()
+        {
+            if (previousStepButton == null)
+                ResolveButtonReferences();
+
+            if (previousStepButton != null)
+                return;
+
+            Button sourceButton = skipStepButton != null ? skipStepButton : returnToMenuButton;
+            if (sourceButton == null)
+                return;
+
+            Transform parent = sourceButton.transform.parent != null
+                ? sourceButton.transform.parent
+                : returnToMenuButtonRoot != null ? returnToMenuButtonRoot.transform : transform;
+
+            GameObject buttonObject = new GameObject("PreviousStepButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(parent, false);
+
+            RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
+            RectTransform sourceRect = sourceButton.GetComponent<RectTransform>();
+            if (sourceRect != null)
+            {
+                buttonRect.anchorMin = sourceRect.anchorMin;
+                buttonRect.anchorMax = sourceRect.anchorMax;
+                buttonRect.pivot = sourceRect.pivot;
+                buttonRect.sizeDelta = sourceRect.sizeDelta;
+                float verticalOffset = sourceRect.sizeDelta.y + 20f;
+                buttonRect.anchoredPosition = sourceRect.anchoredPosition + Vector2.up * verticalOffset;
+            }
+            else
+            {
+                buttonRect.anchorMin = new Vector2(0.5f, 0f);
+                buttonRect.anchorMax = new Vector2(0.5f, 0f);
+                buttonRect.pivot = new Vector2(0.5f, 0f);
+                buttonRect.sizeDelta = new Vector2(220f, 67f);
+                buttonRect.anchoredPosition = new Vector2(0f, 232f);
+            }
+
+            Image buttonImage = buttonObject.GetComponent<Image>();
+            Image sourceImage = sourceButton.targetGraphic as Image;
+            if (sourceImage != null)
+            {
+                buttonImage.sprite = sourceImage.sprite;
+                buttonImage.type = sourceImage.type;
+                buttonImage.preserveAspect = sourceImage.preserveAspect;
+                buttonImage.fillCenter = sourceImage.fillCenter;
+                buttonImage.color = sourceImage.color;
+                buttonImage.pixelsPerUnitMultiplier = sourceImage.pixelsPerUnitMultiplier;
+            }
+            else
+            {
+                buttonImage.color = new Color(0.235f, 0.408f, 0.424f, 1f);
+            }
+
+            Button button = buttonObject.GetComponent<Button>();
+            button.transition = sourceButton.transition;
+            button.colors = sourceButton.colors;
+            button.spriteState = sourceButton.spriteState;
+            button.animationTriggers = sourceButton.animationTriggers;
+            button.navigation = sourceButton.navigation;
+            button.targetGraphic = buttonImage;
+
+            TextMeshProUGUI sourceText = sourceButton.GetComponentInChildren<TextMeshProUGUI>(true);
+            GameObject textObject = new GameObject("Text (TMP)", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+            textObject.transform.SetParent(buttonObject.transform, false);
+
+            RectTransform textRect = textObject.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI label = textObject.GetComponent<TextMeshProUGUI>();
+            label.text = "Previous step";
+            label.alignment = TextAlignmentOptions.Center;
+            label.raycastTarget = true;
+            label.color = sourceText != null ? sourceText.color : Color.white;
+            label.fontSize = sourceText != null ? sourceText.fontSize : 25f;
+            label.enableAutoSizing = sourceText != null && sourceText.enableAutoSizing;
+            label.fontSizeMin = sourceText != null ? sourceText.fontSizeMin : 18f;
+            label.fontSizeMax = sourceText != null ? sourceText.fontSizeMax : 36f;
+
+            if (sourceText != null)
+            {
+                label.font = sourceText.font;
+                label.fontStyle = sourceText.fontStyle;
+            }
+
+            previousStepButtonRoot = buttonObject;
+            previousStepButton = button;
+            SetPreviousStepButtonVisible(false);
+            ConfigureHoldToConfirmButton(previousStepButton);
+
+            if (Application.isPlaying)
+                WireButton(previousStepButton, GoToPreviousStep);
+        }
+
         [ContextMenu("Setup/Wire Button Listeners")]
         public void WireButtonListeners()
         {
@@ -443,6 +664,7 @@ namespace FireValveSimulator
 
             WireButton(returnToMenuButton, ReturnToMainMenu);
             WireButton(skipStepButton, SkipCurrentStep);
+            WireButton(previousStepButton, GoToPreviousStep);
         }
 
         [ContextMenu("Setup/Unwire Button Listeners")]
@@ -463,12 +685,14 @@ namespace FireValveSimulator
 
             UnwireButton(returnToMenuButton, ReturnToMainMenu);
             UnwireButton(skipStepButton, SkipCurrentStep);
+            UnwireButton(previousStepButton, GoToPreviousStep);
         }
 
         private void HandleModeChanged(SimulatorMode mode)
         {
             SetReturnToMenuButtonVisible(IsInModePanelVisible(mode));
             SetSkipStepButtonVisible(IsSkipStepMode(mode));
+            RefreshPreviousStepButtonVisibility();
 
             if (mode == SimulatorMode.Menu)
                 ShowMainMenu();
@@ -479,6 +703,34 @@ namespace FireValveSimulator
         private void HandleAllStepsCompleted()
         {
             ShowCompletePanel();
+        }
+
+        private void HandleCurrentStepChanged(ActionStep step, int stepIndex)
+        {
+            RefreshPreviousStepButtonVisibility();
+            UpdateCurrentStepLabel(stepIndex);
+        }
+
+        private void UpdateCurrentStepLabel(int stepIndex)
+        {
+            ResolveCurrentStepLabel();
+            if (currentStepLabel == null)
+                return;
+
+            int displayStep = stepIndex >= 0 ? stepIndex + 1 : 0;
+            string format = string.IsNullOrWhiteSpace(currentStepLabelFormat)
+                ? "Current Step : {0}"
+                : currentStepLabelFormat;
+
+            try
+            {
+                currentStepLabel.text = string.Format(format, displayStep);
+            }
+            catch (System.FormatException)
+            {
+                currentStepLabel.text = $"Current Step : {displayStep}";
+                Debug.LogWarning($"Invalid current step label format '{format}'. Use {{0}} for the step number.", this);
+            }
         }
 
         private void HideModeSelectionPanels()
@@ -506,11 +758,21 @@ namespace FireValveSimulator
             SetActive(skipStepButtonRoot, visible);
         }
 
+        private void SetPreviousStepButtonVisible(bool visible)
+        {
+            SetActive(previousStepButtonRoot, visible);
+        }
+
         private bool IsSkipStepMode(SimulatorMode mode)
         {
             if (modeManager != null)
                 return modeManager.IsStepSkipAllowedInMode(mode);
 
+            return mode == SimulatorMode.Learning || mode == SimulatorMode.Training;
+        }
+
+        private bool IsPreviousStepMode(SimulatorMode mode)
+        {
             return mode == SimulatorMode.Learning || mode == SimulatorMode.Training;
         }
 
@@ -558,6 +820,17 @@ namespace FireValveSimulator
             return null;
         }
 
+        private static bool IsButtonLabel(TMP_Text label, Button button)
+        {
+            return label != null && button != null && label.transform.IsChildOf(button.transform);
+        }
+
+        private static bool ContainsIgnoreCase(string value, string searchValue)
+        {
+            return !string.IsNullOrEmpty(value) &&
+                   value.IndexOf(searchValue, System.StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         private void WireButton(Button button, UnityEngine.Events.UnityAction action)
         {
             if (button == null || action == null)
@@ -590,6 +863,7 @@ namespace FireValveSimulator
             AddButton(buttons, examStartButton);
             AddButton(buttons, returnToMenuButton);
             AddButton(buttons, skipStepButton);
+            AddButton(buttons, previousStepButton);
 
             AddButtonsFromRoot(buttons, mainMenuPanel);
             AddButtonsFromRoot(buttons, learningModePanel);
@@ -599,6 +873,7 @@ namespace FireValveSimulator
             AddButtonsFromRoot(buttons, examFailedPanel);
             AddButtonsFromRoot(buttons, returnToMenuButtonRoot);
             AddButtonsFromRoot(buttons, skipStepButtonRoot);
+            AddButtonsFromRoot(buttons, previousStepButtonRoot);
 
             foreach (Button button in buttons)
                 ConfigureHoldToConfirmButton(button);

@@ -22,6 +22,8 @@ namespace FireValveSimulator
     {
         public string stepName;
         public string[] objectTags;
+        [Tooltip("Optional objects to outline as hints. When empty, Object Tags are used.")]
+        public string[] hintObjectTags;
         public ActionType actionType;
 
         [SerializeField] private float pressureTarget;           // For CheckPSI
@@ -31,6 +33,9 @@ namespace FireValveSimulator
         public float PressureTarget => pressureTarget;
         public float WaitDuration => waitDuration;
         public float RequiredRotationDegrees => requiredRotationDegrees;
+        public string[] HintObjectTags => hintObjectTags != null && hintObjectTags.Length > 0
+            ? hintObjectTags
+            : objectTags;
 
     #if UNITY_EDITOR
         [UnityEditor.CustomEditor(typeof(ActionStep))]

@@ -46,5 +46,10 @@ namespace FireValveSimulator
         {
             currentState = initialState;
         }
+
+        public void SetStateWithoutNotification(ValveState state)
+        {
+            currentState = state;
+        }
     }
 }

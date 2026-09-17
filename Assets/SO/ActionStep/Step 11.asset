@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepName: Check PSI Intensity
   objectTags: []
+  hintObjectTags:
+  - DieselFirePumpSwitchAuto
   actionType: 6
   pressureTarget: 100
   waitDuration: 0

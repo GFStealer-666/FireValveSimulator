@@ -2877,8 +2877,10 @@ GameObject:
   - component: {fileID: 99479869}
   - component: {fileID: 99479868}
   - component: {fileID: 99479870}
+  - component: {fileID: 99479872}
+  - component: {fileID: 99479871}
   m_Layer: 0
-  m_Name: Pipes_valve Visual
+  m_Name: ValveVisual
   m_TagString: WaterValveHydrant2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2977,6 +2979,70 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.17414482
   m_Center: {x: -0.000114418624, y: 0.0018284449, z: 0.00014337158}
+--- !u!114 &99479871
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99479865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &99479872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99479865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 99479868}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &120186561
 GameObject:
   m_ObjectHideFlags: 0
@@ -4375,7 +4441,7 @@ GameObject:
   - component: {fileID: 188619032}
   - component: {fileID: 188619033}
   m_Layer: 0
-  m_Name: DIsel Control Switch Off Collider
+  m_Name: SwitchOffCollider
   m_TagString: DieselFirePumpSwitchOff
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4679,7 +4745,7 @@ GameObject:
   m_Component:
   - component: {fileID: 193975566}
   m_Layer: 0
-  m_Name: WaterSwitchHydrant1  Root (Step5)
+  m_Name: WaterSwitchHydrant1Root (Step5)
   m_TagString: WaterSwitchHydrant1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4838,7 +4904,7 @@ GameObject:
   - component: {fileID: 201965044}
   - component: {fileID: 201965045}
   m_Layer: 0
-  m_Name: DIsel Control Switch Auto Collider
+  m_Name: SwitchAutoCollider
   m_TagString: DieselFirePumpSwitchAuto
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5500,8 +5566,10 @@ GameObject:
   - component: {fileID: 231226699}
   - component: {fileID: 231226698}
   - component: {fileID: 231226700}
+  - component: {fileID: 231226702}
+  - component: {fileID: 231226701}
   m_Layer: 0
-  m_Name: Pipes_valve Visual
+  m_Name: ValveVisual
   m_TagString: WaterValveHydrant1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5600,6 +5668,70 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.17414483
   m_Center: {x: -0.000113941955, y: 0.0018282067, z: 0.00014384839}
+--- !u!114 &231226701
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231226695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &231226702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231226695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 231226698}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &232991534
 GameObject:
   m_ObjectHideFlags: 0
@@ -5910,7 +6042,7 @@ GameObject:
   m_Component:
   - component: {fileID: 240104623}
   m_Layer: 0
-  m_Name: AC Fire Pump Control Root (Step4, 8, 15)
+  m_Name: ACFirePumpControlRoot (Step4, 8, 15)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9765,8 +9897,10 @@ GameObject:
   - component: {fileID: 468847383}
   - component: {fileID: 468847382}
   - component: {fileID: 468847384}
+  - component: {fileID: 468847386}
+  - component: {fileID: 468847385}
   m_Layer: 0
-  m_Name: Pipes_valve Visual
+  m_Name: ValveVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9865,6 +9999,70 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.17414486
   m_Center: {x: -0.0001139418, y: 0.0018284451, z: 0.00014384839}
+--- !u!114 &468847385
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468847379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &468847386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468847379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 468847382}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &468915579
 GameObject:
   m_ObjectHideFlags: 0
@@ -10758,6 +10956,7 @@ GameObject:
   - component: {fileID: 493734691}
   - component: {fileID: 493734693}
   - component: {fileID: 493734692}
+  - component: {fileID: 493734694}
   m_Layer: 0
   m_Name: AC Control
   m_TagString: Untagged
@@ -10837,6 +11036,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493734690}
   m_Mesh: {fileID: 4300018, guid: e776f390992d2ab42a57508d9be01173, type: 3}
+--- !u!114 &493734694
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493734690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
 --- !u!1001 &496418560
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11658,7 +11869,7 @@ GameObject:
   - component: {fileID: 514970453}
   - component: {fileID: 514970452}
   m_Layer: 0
-  m_Name: Pipes_valve Visual
+  m_Name: ValveVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11787,7 +11998,7 @@ MonoBehaviour:
   renderStyle: 1
   outlineParameters:
     enabled: 1
-    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
     dilateShift: 1
     blurShift: 1
     fillPass:
@@ -15422,7 +15633,7 @@ GameObject:
   m_Component:
   - component: {fileID: 665188743}
   m_Layer: 0
-  m_Name: Jockey Control (Step2, 14)
+  m_Name: JockeyControlRoot(Step2, 14)
   m_TagString: JockeyPump1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23279,7 +23490,7 @@ GameObject:
   - component: {fileID: 905326741}
   - component: {fileID: 905326742}
   m_Layer: 0
-  m_Name: AC Control Switch Off Collider
+  m_Name: ACSwitchOffCollider
   m_TagString: ACFirePumpSwitchOff
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24311,6 +24522,7 @@ GameObject:
   - component: {fileID: 920560118}
   - component: {fileID: 920560117}
   - component: {fileID: 920560116}
+  - component: {fileID: 920560122}
   m_Layer: 0
   m_Name: Grip Pipe
   m_TagString: WaterSwitchHydrant1
@@ -24499,6 +24711,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920560114}
   m_Mesh: {fileID: 4300020, guid: 1530222e6b975ee4789ae7fd65a1da86, type: 3}
+--- !u!114 &920560122
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920560114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
 --- !u!4 &922444841
 Transform:
   m_ObjectHideFlags: 0
@@ -26721,6 +26945,77 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  stepOutlineBindings:
+  - step: {fileID: 11400000, guid: ed37da0526e54a39b5c29119f931534b, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 3469287836949330715}
+  - step: {fileID: 11400000, guid: ed292dab703080841a4ed84ccd8a21ec, type: 2}
+    targets:
+    - completionTag: DischargeValve1
+      target: {fileID: 468847386}
+    - completionTag: DischargeValve2
+      target: {fileID: 514970452}
+  - step: {fileID: 11400000, guid: eab4684ca6b10d04a8d82049a6240a0e, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1341520950}
+  - step: {fileID: 11400000, guid: e081f8c0b010c7c41bae17ea408a4ec6, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1341520947}
+  - step: {fileID: 11400000, guid: 2ffbcdabd11ab964786609578c1cff9a, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1341520952}
+  - step: {fileID: 11400000, guid: 7b798bab450cc2940ab2e2a7c08d832c, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1057122301}
+  - step: {fileID: 11400000, guid: d6346ba3639350f4db1b0bf6e25e212d, type: 2}
+    targets: []
+  - step: {fileID: 11400000, guid: f09ad71e143e73b4d8389e1cd479eccf, type: 2}
+    targets: []
+  - step: {fileID: 11400000, guid: 9da2085b0f10cc143851f57dc82b8111, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1388414712}
+  - step: {fileID: 11400000, guid: 040a14213b7a4054e9ff4a0365276539, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1341520947}
+  - step: {fileID: 11400000, guid: 3b37a70217bfb584c84818fddd439767, type: 2}
+    targets:
+    - completionTag: WaterValveHydrant1
+      target: {fileID: 231226702}
+    - completionTag: WaterValveHydrant2
+      target: {fileID: 99479872}
+  - step: {fileID: 11400000, guid: 8c54292eed1d4e4438ffcff19b0eeb93, type: 2}
+    targets: []
+  - step: {fileID: 11400000, guid: 1aaa68885086d884bb3e4f57292078fb, type: 2}
+    targets: []
+  - step: {fileID: 11400000, guid: 59bf884f401b4754b91f8f11438003ac, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1100712802}
+  - step: {fileID: 11400000, guid: f5e4c988032a7e7419d4bbea9475ef41, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1341520950}
+  - step: {fileID: 11400000, guid: b230545fb640bee4f87e01be9d2fc24e, type: 2}
+    targets:
+    - completionTag: 
+      target: {fileID: 1341520952}
+  - step: {fileID: 11400000, guid: bf602090d96ab694fbc9d5ebdde6d7db, type: 2}
+    targets:
+    - completionTag: DischargeValve1
+      target: {fileID: 468847386}
+    - completionTag: DischargeValve2
+      target: {fileID: 514970452}
+  - step: {fileID: 11400000, guid: 8acc2541893d177419f60b75217db9aa, type: 2}
+    targets: []
+  - step: {fileID: 11400000, guid: 14462d6074e3cce4d8a87b034d60dacc, type: 2}
+    targets: []
   isExam: 0
   stepText: {fileID: 0}
 --- !u!4 &995306150
@@ -27130,6 +27425,7 @@ GameObject:
   - component: {fileID: 1011033896}
   - component: {fileID: 1011033898}
   - component: {fileID: 1011033897}
+  - component: {fileID: 1011033899}
   m_Layer: 0
   m_Name: AC Control
   m_TagString: Untagged
@@ -27209,6 +27505,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011033895}
   m_Mesh: {fileID: 4300018, guid: e776f390992d2ab42a57508d9be01173, type: 3}
+--- !u!114 &1011033899
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011033895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
 --- !u!1 &1012601280
 GameObject:
   m_ObjectHideFlags: 0
@@ -28557,6 +28865,10 @@ MonoBehaviour:
   returnToMenuButton: {fileID: 0}
   skipStepButtonRoot: {fileID: 0}
   skipStepButton: {fileID: 0}
+  previousStepButtonRoot: {fileID: 0}
+  previousStepButton: {fileID: 0}
+  currentStepLabel: {fileID: 0}
+  currentStepLabelFormat: 'Current Step : {0}'
 --- !u!1 &1057122296
 GameObject:
   m_ObjectHideFlags: 0
@@ -28568,8 +28880,10 @@ GameObject:
   - component: {fileID: 1057122297}
   - component: {fileID: 1057122299}
   - component: {fileID: 1057122298}
+  - component: {fileID: 1057122301}
+  - component: {fileID: 1057122300}
   m_Layer: 0
-  m_Name: Valve drain
+  m_Name: WaterSwitchVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28648,6 +28962,70 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1057122296}
   m_Mesh: {fileID: 4300018, guid: 1530222e6b975ee4789ae7fd65a1da86, type: 3}
+--- !u!114 &1057122300
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057122296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &1057122301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057122296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 1057122298}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &1057412458
 GameObject:
   m_ObjectHideFlags: 0
@@ -28824,6 +29202,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 0}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -29770,8 +30151,10 @@ GameObject:
   - component: {fileID: 1100712797}
   - component: {fileID: 1100712800}
   - component: {fileID: 1100712799}
+  - component: {fileID: 1100712802}
+  - component: {fileID: 1100712801}
   m_Layer: 0
-  m_Name: Diesel control Visual
+  m_Name: DiselStopVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29849,6 +30232,70 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100712796}
   m_Mesh: {fileID: 4300018, guid: e776f390992d2ab42a57508d9be01173, type: 3}
+--- !u!114 &1100712801
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100712796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &1100712802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100712796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 1100712799}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &1102974029
 GameObject:
   m_ObjectHideFlags: 0
@@ -30532,7 +30979,7 @@ GameObject:
   - component: {fileID: 1139841359}
   - component: {fileID: 1139841360}
   m_Layer: 0
-  m_Name: AC Control Switch Auto Collider
+  m_Name: ACSwitchAutoCollider
   m_TagString: ACFirePumpSwitchAuto
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37455,13 +37902,27 @@ GameObject:
   - component: {fileID: 1341284368}
   - component: {fileID: 1338384432}
   - component: {fileID: 1339515632}
+  - component: {fileID: 1341520947}
+  - component: {fileID: 1341520945}
   m_Layer: 0
-  m_Name: Diesel control Visual
+  m_Name: DiselOffAutoVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
+--- !u!114 &1341520945
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341520944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
 --- !u!1 &1341520946
 GameObject:
   m_ObjectHideFlags: 0
@@ -37473,13 +37934,67 @@ GameObject:
   - component: {fileID: 1341284370}
   - component: {fileID: 1338384434}
   - component: {fileID: 1339515634}
+  - component: {fileID: 1341520952}
+  - component: {fileID: 1341520951}
   m_Layer: 0
-  m_Name: AC Control Visual
+  m_Name: ACAutoVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
+--- !u!114 &1341520947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341520944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 1339515632}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &1341520948
 GameObject:
   m_ObjectHideFlags: 0
@@ -37491,13 +38006,143 @@ GameObject:
   - component: {fileID: 1341284372}
   - component: {fileID: 1338384436}
   - component: {fileID: 1339515636}
+  - component: {fileID: 1341520950}
+  - component: {fileID: 1341520949}
   m_Layer: 0
-  m_Name: JC Visual
+  m_Name: JCVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
+--- !u!114 &1341520949
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341520948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &1341520950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341520948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 1339515636}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+--- !u!114 &1341520951
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341520946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &1341520952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341520946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 1339515634}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &1341962488
 GameObject:
   m_ObjectHideFlags: 0
@@ -37981,7 +38626,7 @@ GameObject:
   - component: {fileID: 1359942292}
   - component: {fileID: 1359942297}
   m_Layer: 0
-  m_Name: WaterValveHydrant2 Root (Step 10)
+  m_Name: WaterValveHydrant2Root (Step 10)
   m_TagString: WaterValveHydrant2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38057,8 +38702,8 @@ Transform:
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1390224450}
   - {fileID: 99479866}
+  - {fileID: 1390224450}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -101.817, y: 118.963, z: 238.507}
 --- !u!114 &1359942297
@@ -38143,6 +38788,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 1359942292}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -38638,8 +39286,10 @@ GameObject:
   - component: {fileID: 1388414707}
   - component: {fileID: 1388414710}
   - component: {fileID: 1388414709}
+  - component: {fileID: 1388414712}
+  - component: {fileID: 1388414711}
   m_Layer: 0
-  m_Name: AC Control Visual (1)
+  m_Name: ACOffVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38718,6 +39368,70 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388414706}
   m_Mesh: {fileID: 4300014, guid: e776f390992d2ab42a57508d9be01173, type: 3}
+--- !u!114 &1388414711
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388414706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &1388414712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388414706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 1388414709}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &1389273232
 GameObject:
   m_ObjectHideFlags: 0
@@ -40628,6 +41342,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 1485044164}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -44245,6 +44962,10 @@ MonoBehaviour:
   returnToMenuButton: {fileID: 1353433950}
   skipStepButtonRoot: {fileID: 863007332}
   skipStepButton: {fileID: 238246595}
+  previousStepButtonRoot: {fileID: 2024332381}
+  previousStepButton: {fileID: 2024332383}
+  currentStepLabel: {fileID: 0}
+  currentStepLabelFormat: 'Current Step : {0}'
 --- !u!1 &1574309741
 GameObject:
   m_ObjectHideFlags: 0
@@ -46728,7 +47449,7 @@ GameObject:
   - component: {fileID: 1653769343}
   - component: {fileID: 1653769348}
   m_Layer: 0
-  m_Name: WaterValveHydrant1 Root (Step 10)
+  m_Name: WaterValveHydrant1Root (Step 10)
   m_TagString: WaterValveHydrant1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46891,6 +47612,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 1653769343}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -48306,7 +49030,7 @@ GameObject:
   - component: {fileID: 1705845324}
   - component: {fileID: 1705845325}
   m_Layer: 0
-  m_Name: DIsel Control Switch Stop Collider
+  m_Name: SwitchStopCollider
   m_TagString: DieselFirePumpSwitchStop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56034,7 +56758,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2127471842}
   m_Layer: 0
-  m_Name: Disel Fire Pump Control Root (Step3, 9, 13)
+  m_Name: DiselFirePumpControlRoot (Step3, 9, 13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56973,6 +57697,8 @@ GameObject:
   - component: {fileID: 3469287836949330713}
   - component: {fileID: 3469287836949330712}
   - component: {fileID: 3469287836949330711}
+  - component: {fileID: 3469287836949330715}
+  - component: {fileID: 3469287836949330714}
   m_Layer: 0
   m_Name: EarPhone (Step0)
   m_TagString: EarPhone
@@ -57539,6 +58265,70 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 3
+--- !u!114 &3469287836949330714
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148622814729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
+--- !u!114 &3469287836949330715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148622814729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EPO::EPOOutline.Outlinable
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - CutoutMask: 8
+    renderer: {fileID: 1711813856174690268}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0, g: 0.542315, b: 1, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &3876271073427731138
 GameObject:
   m_ObjectHideFlags: 0

@@ -34,6 +34,12 @@ namespace FireValveSimulator
             None
         }
 
+        private enum ValveRotationDirection
+        {
+            Negative = -1,
+            Positive = 1
+        }
+
         [SerializeField] private Transform handle;
         [SerializeField] private Transform rotationCenter;
         [SerializeField] private Vector3 localRotationAxis = Vector3.forward;
@@ -41,6 +47,13 @@ namespace FireValveSimulator
         [SerializeField] private float fallbackRequiredRotationDegrees = 1000f;
         [SerializeField] private float maxDegreesPerFrame = 45f;
         [SerializeField] private ValveStateTracker linkedValve;
+
+        [Header("Step Rotation Direction")]
+        [SerializeField] private bool restrictToStepDirection = true;
+        [SerializeField, Tooltip("Signed direction around Local Rotation Axis while opening a valve.")]
+        private ValveRotationDirection turnOnDirection = ValveRotationDirection.Positive;
+        [SerializeField, Tooltip("Signed direction around Local Rotation Axis while closing a valve.")]
+        private ValveRotationDirection turnOffDirection = ValveRotationDirection.Negative;
 
         [Header("Editor Testing")]
         [SerializeField] private float testRotationDegrees = 90f;
@@ -252,6 +265,7 @@ namespace FireValveSimulator
                 return;
 
             float averageDelta = totalDelta / validInteractorCount;
+            averageDelta = ConstrainRotationDelta(averageDelta);
             if (Mathf.Approximately(averageDelta, 0f))
                 return;
 
@@ -288,6 +302,7 @@ namespace FireValveSimulator
                 return;
 
             float averageDelta = totalDelta / validDeltaCount;
+            averageDelta = ConstrainRotationDelta(averageDelta);
             if (Mathf.Approximately(averageDelta, 0f))
                 return;
 
@@ -361,7 +376,30 @@ namespace FireValveSimulator
         {
             return currentStep != null &&
                    (currentStep.actionType == ActionType.TurnOnValve || currentStep.actionType == ActionType.TurnOffValve) &&
-                   actionOrderManager.CurrentStepRequiresTag(linkedValve.tag);
+                   actionOrderManager.CurrentStepRequiresTag(linkedValve.tag) &&
+                   !actionOrderManager.CurrentStepTagCompleted(linkedValve.tag);
+        }
+
+        private float ConstrainRotationDelta(float rotationDelta)
+        {
+            if (!restrictToStepDirection)
+                return rotationDelta;
+
+            if (actionOrderManager == null)
+                actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
+
+            if (actionOrderManager == null || linkedValve == null)
+                return 0f;
+
+            ActionStep step = actionOrderManager.GetCurrentStep();
+            if (!CanCompleteCurrentStep(step))
+                return 0f;
+
+            float allowedSign = step.actionType == ActionType.TurnOnValve
+                ? (float)turnOnDirection
+                : (float)turnOffDirection;
+
+            return Mathf.Sign(rotationDelta) == Mathf.Sign(allowedSign) ? rotationDelta : 0f;
         }
 
         private bool TryGetInteractorAngle(IXRSelectInteractor interactor, out float angle)

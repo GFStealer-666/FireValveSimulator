@@ -13,6 +13,8 @@ namespace FireValveSimulator
         private ActionOrderManager actionOrderManager;
         private float previousKnobRotation;
 
+        public float CurrentKnobValue => knob != null ? knob.value : 0f;
+
         private void Start()
         {
             actionOrderManager = FindAnyObjectByType<ActionOrderManager>();
@@ -71,6 +73,17 @@ namespace FireValveSimulator
                 knob.value = 0f;
                 SyncKnobBaseline();
             }
+        }
+
+        public void RestoreForPreviousStep(float knobValue, bool wasEnabled)
+        {
+            currentAccumulatedRotation = 0f;
+
+            if (knob != null)
+                knob.value = knobValue;
+
+            enabled = wasEnabled;
+            SyncKnobBaseline();
         }
 
         private bool CanTrackStep(ActionStep currentStep)
