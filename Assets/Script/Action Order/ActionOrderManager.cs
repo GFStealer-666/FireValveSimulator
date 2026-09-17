@@ -39,6 +39,7 @@ namespace FireValveSimulator
 
         public static event Action OnAllStepsCompleted, OnStepFailed, OnStepSuccess;
         public static event Action<ActionStep> OnStepCompleted;
+        public static event Action<ActionStep, bool> OnStepFinished;
         public static event Action<ActionStep, int> OnCurrentStepChanged;
         public event Action<ActionStep, int> CurrentStepChanged;
 
@@ -52,15 +53,24 @@ namespace FireValveSimulator
         private readonly Dictionary<int, StepStateSnapshot> stepStateSnapshots = new Dictionary<int, StepStateSnapshot>();
         public bool isExam = false;
         public TMP_Text stepText;
+
+        [Header("Timer / PSI Action")]
+        [Tooltip("Shared panel shown only while the current action is Wait Limited Time or Check PSI.")]
+        [SerializeField] private GameObject timerPsiPanel;
+        [SerializeField] private WaitTimer waitTimer;
+        [SerializeField] private PressureSimulator pressureSimulator;
+
         public int CurrentStepIndex => sequenceActive ? currentStepIndex : -1;
         public int StepCount => orderedSteps != null ? orderedSteps.Count : 0;
 
         private void Awake()
         {
             DisableAllConfiguredOutlines();
+            ResolveTimerPsiReferences();
+            RefreshTimerPsiActionState();
         }
 
-        [ContextMenu("Debug/Progress To Next Step")]
+        [ContextMenu("Progress To Next Step")]
         public void CompleteCurrentStepFromContextMenu()
         {
             SkipCurrentStep();
@@ -102,11 +112,11 @@ namespace FireValveSimulator
             }
 
             Debug.Log($"Skipping step {currentStepIndex + 1}: {currentStep.stepName}");
-            CompleteStep();
+            CompleteStep(true);
             return true;
         }
 
-        [ContextMenu("Debug/Reverse To Previous Step")]
+        [ContextMenu("Reverse To Previous Step")]
         public void PreviousStep()
         {
             TryGoToPreviousStep();
@@ -145,6 +155,7 @@ namespace FireValveSimulator
             completedTagsInCurrentStep.Clear();
 
             UpdateCurrentStepUI();
+            RefreshTimerPsiActionState();
             HighlightCurrentStepObjects();
             NotifyCurrentStepChanged();
             CaptureCurrentStepState();
@@ -219,6 +230,7 @@ namespace FireValveSimulator
 
         public void InitializeSequence()
         {
+            ResetTransientStepHelpers();
             stepStateSnapshots.Clear();
 
             if (!HasSteps())
@@ -226,6 +238,7 @@ namespace FireValveSimulator
                 sequenceActive = false;
                 currentStep = null;
                 UpdateCurrentStepUI();
+                RefreshTimerPsiActionState();
                 NotifyCurrentStepChanged();
                 Debug.LogWarning("ActionOrderManager cannot initialize because no action steps are assigned.");
                 return;
@@ -235,6 +248,7 @@ namespace FireValveSimulator
             currentStepIndex = Mathf.Clamp(currentStepIndex, 0, orderedSteps.Count - 1);
             currentStep = orderedSteps[currentStepIndex];
             UpdateCurrentStepUI();
+            RefreshTimerPsiActionState();
 
             if (!isExam)
                 HighlightCurrentStepObjects();
@@ -317,6 +331,7 @@ namespace FireValveSimulator
         public void ResetSequence()
         {
             Debug.Log("Resetting sequence...");
+            ResetTransientStepHelpers();
             sequenceActive = true;
             currentStepIndex = 0;
             completedTagsInCurrentStep.Clear();
@@ -328,12 +343,14 @@ namespace FireValveSimulator
                 currentStep = null;
                 ClearHighlights();
                 UpdateCurrentStepUI();
+                RefreshTimerPsiActionState();
                 NotifyCurrentStepChanged();
                 Debug.LogWarning("ActionOrderManager cannot reset because no action steps are assigned.");
                 return;
             }
 
             currentStep = orderedSteps[currentStepIndex];
+            RefreshTimerPsiActionState();
 
             if (!isExam)
                 HighlightCurrentStepObjects();
@@ -345,6 +362,7 @@ namespace FireValveSimulator
 
         public void ResetToIdle()
         {
+            ResetTransientStepHelpers();
             sequenceActive = false;
             currentStepIndex = 0;
             completedTagsInCurrentStep.Clear();
@@ -355,6 +373,7 @@ namespace FireValveSimulator
             if (stepText != null)
                 stepText.text = "";
 
+            RefreshTimerPsiActionState();
             NotifyCurrentStepChanged();
         }
 
@@ -402,6 +421,84 @@ namespace FireValveSimulator
             }
         }
 
+        [ContextMenu("Setup/Resolve Timer / PSI References")]
+        public void ResolveTimerPsiReferences()
+        {
+            if (waitTimer == null)
+                waitTimer = FindAnyObjectByType<WaitTimer>(FindObjectsInactive.Include);
+
+            if (pressureSimulator == null)
+                pressureSimulator = FindAnyObjectByType<PressureSimulator>(FindObjectsInactive.Include);
+
+            if (timerPsiPanel == null && waitTimer != null && waitTimer.timerText != null)
+                timerPsiPanel = waitTimer.timerText.transform.parent != null
+                    ? waitTimer.timerText.transform.parent.gameObject
+                    : waitTimer.timerText.gameObject;
+
+            if (timerPsiPanel == null && pressureSimulator != null && pressureSimulator.pressureText != null)
+                timerPsiPanel = pressureSimulator.pressureText.transform.parent != null
+                    ? pressureSimulator.pressureText.transform.parent.gameObject
+                    : pressureSimulator.pressureText.gameObject;
+
+            if (timerPsiPanel == null)
+                timerPsiPanel = FindSceneObjectByName("PSI/CountdownPanel");
+
+            if (timerPsiPanel == null)
+                return;
+
+            TMP_Text sharedValueLabel = timerPsiPanel.GetComponentInChildren<TMP_Text>(true);
+            if (waitTimer != null && waitTimer.timerText == null)
+                waitTimer.timerText = sharedValueLabel;
+
+            if (pressureSimulator != null && pressureSimulator.pressureText == null)
+                pressureSimulator.pressureText = sharedValueLabel;
+        }
+
+        private void RefreshTimerPsiActionState()
+        {
+            ResolveTimerPsiReferences();
+
+            bool timerStepActive = sequenceActive && currentStep != null &&
+                                   currentStep.actionType == ActionType.WaitLimitedTime;
+            bool pressureStepActive = sequenceActive && currentStep != null &&
+                                      currentStep.actionType == ActionType.CheckPSI;
+
+            if (waitTimer != null)
+            {
+                if (!timerStepActive && waitTimer.isActive)
+                    waitTimer.ResetTimer();
+
+                waitTimer.isActive = timerStepActive;
+            }
+
+            if (pressureSimulator != null)
+            {
+                if (!pressureStepActive && pressureSimulator.isActive)
+                    pressureSimulator.ResetPressure();
+
+                pressureSimulator.isActive = pressureStepActive;
+            }
+
+            if (timerPsiPanel != null)
+                timerPsiPanel.SetActive(timerStepActive || pressureStepActive);
+        }
+
+        private static GameObject FindSceneObjectByName(string objectName)
+        {
+            foreach (GameObject candidate in Resources.FindObjectsOfTypeAll<GameObject>())
+            {
+                if (candidate != null &&
+                    candidate.name == objectName &&
+                    candidate.scene.IsValid() &&
+                    candidate.scene.isLoaded)
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
         private void HighlightCurrentStepObjects()
         {
             if (isExam)
@@ -439,11 +536,13 @@ namespace FireValveSimulator
             }
         }
 
-        private void CompleteStep()
+        private void CompleteStep(bool wasSkipped = false)
         {
             ActionStep completedStep = currentStep;
+            ResetTransientStepHelpers();
             Debug.Log($"Step {completedStep.stepName} completed!");
             OnStepCompleted?.Invoke(completedStep);
+            OnStepFinished?.Invoke(completedStep, wasSkipped);
             onStepSuccess?.Invoke();
             OnStepSuccess?.Invoke();
 
@@ -456,6 +555,7 @@ namespace FireValveSimulator
                 sequenceActive = false;
                 currentStep = null;
                 ClearHighlights();
+                RefreshTimerPsiActionState();
                 onAllStepsCompleted?.Invoke();
                 OnAllStepsCompleted?.Invoke();
                 UpdateCurrentStepUI();
@@ -465,6 +565,7 @@ namespace FireValveSimulator
             {
                 currentStep = orderedSteps[currentStepIndex];
                 UpdateCurrentStepUI();
+                RefreshTimerPsiActionState();
                 HighlightCurrentStepObjects();
                 NotifyCurrentStepChanged();
                 CaptureCurrentStepState();
@@ -481,13 +582,10 @@ namespace FireValveSimulator
                 if (binding == null || binding.step != step || binding.targets == null)
                     continue;
 
-                bool hasUsableTarget = false;
                 foreach (StepOutlineTargetBinding targetBinding in binding.targets)
                 {
                     if (targetBinding == null || targetBinding.target == null)
                         continue;
-
-                    hasUsableTarget = true;
 
                     if (!string.IsNullOrEmpty(targetBinding.completionTag) &&
                         completedTagsInCurrentStep.Contains(targetBinding.completionTag))
@@ -501,7 +599,9 @@ namespace FireValveSimulator
                         activeStepOutlines.Add(targetBinding.target);
                 }
 
-                return hasUsableTarget;
+                // The presence of a binding is authoritative. An empty Targets list
+                // intentionally means that this step should not display an outline.
+                return true;
             }
 
             return false;

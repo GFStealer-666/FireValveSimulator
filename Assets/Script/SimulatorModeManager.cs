@@ -1,9 +1,11 @@
 namespace FireValveSimulator
 {
     using System;
+    using System.Collections;
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.Serialization;
+    using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
     public class SimulatorModeManager : MonoBehaviour
     {
@@ -16,6 +18,12 @@ namespace FireValveSimulator
         [Min(0f)]
         [SerializeField] private float examSkipPenaltySeconds = 20f;
 
+        [Header("XR Far Interaction")]
+        [Tooltip("Keeps the hand ray available in the menu and refreshes it when a simulator mode starts.")]
+        [SerializeField] private bool manageFarInteractors = true;
+        [Tooltip("Optional explicit references. When empty, every Near-Far Interactor in the scene is found automatically.")]
+        [SerializeField] private NearFarInteractor[] farInteractors;
+
         public UnityEvent onEnterMenu;
         public UnityEvent onEnterLearning;
         public UnityEvent onEnterTraining;
@@ -27,6 +35,20 @@ namespace FireValveSimulator
         public SimulatorMode CurrentMode => currentMode;
         public bool IsExamSkippable => isExamSkippable;
         public float ExamSkipPenaltySeconds => Mathf.Max(0f, examSkipPenaltySeconds);
+
+        private Coroutine restoreFarInteractorsCoroutine;
+
+        private void Awake()
+        {
+            if (!manageFarInteractors)
+                return;
+
+            ResolveFarInteractors();
+
+            // The menu must be usable as soon as the scene appears. If the scene is
+            // configured to begin inside a mode, PublishModeChanged refreshes the ray.
+            SetFarInteractionEnabled(currentMode == SimulatorMode.Menu);
+        }
 
         public bool IsStepSkipAllowedInMode(SimulatorMode mode)
         {
@@ -85,6 +107,8 @@ namespace FireValveSimulator
 
         private void PublishModeChanged()
         {
+            RefreshFarInteractionForMode();
+
             OnModeChanged?.Invoke(currentMode);
             onModeChanged?.Invoke();
 
@@ -96,6 +120,65 @@ namespace FireValveSimulator
                 onEnterTraining?.Invoke();
             else if (currentMode == SimulatorMode.Exam)
                 onEnterExam?.Invoke();
+        }
+
+        private void RefreshFarInteractionForMode()
+        {
+            if (!manageFarInteractors)
+                return;
+
+            if (restoreFarInteractorsCoroutine != null)
+            {
+                StopCoroutine(restoreFarInteractorsCoroutine);
+                restoreFarInteractorsCoroutine = null;
+            }
+
+            ResolveFarInteractors();
+
+            if (currentMode == SimulatorMode.Menu)
+            {
+                SetFarInteractionEnabled(true);
+                return;
+            }
+
+            // Drop any menu hover/selection state while the session resets, then
+            // restore the ray on the next frame after the new mode has initialized.
+            SetFarInteractionEnabled(false);
+            restoreFarInteractorsCoroutine = StartCoroutine(RestoreFarInteractionAfterModeStart());
+        }
+
+        private IEnumerator RestoreFarInteractionAfterModeStart()
+        {
+            yield return null;
+
+            ResolveFarInteractors();
+            SetFarInteractionEnabled(true);
+            restoreFarInteractorsCoroutine = null;
+        }
+
+        private void ResolveFarInteractors()
+        {
+            if (farInteractors != null && farInteractors.Length > 0 &&
+                !Array.Exists(farInteractors, interactor => interactor == null))
+            {
+                return;
+            }
+
+            farInteractors = FindObjectsByType<NearFarInteractor>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+        }
+
+        private void SetFarInteractionEnabled(bool enabled)
+        {
+            if (farInteractors == null)
+                return;
+
+            foreach (NearFarInteractor interactor in farInteractors)
+            {
+                if (interactor != null)
+                    interactor.enableFarCasting = enabled;
+            }
         }
 
         private bool TryGetModeFromSceneName(string sceneOrModeName, out SimulatorMode mode)

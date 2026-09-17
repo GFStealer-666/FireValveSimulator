@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 9
   m_EditorClassIdentifier: 
+  statisticsId: c11bdbb7f8314f6e9a8ac768cae943ca
   stepName: Switch auto Diesel Fire Pump
   objectTags:
   - DieselFirePumpSwitchAuto
+  hintObjectTags: []
   actionType: 4
+  pressureTarget: 0
+  waitDuration: 0
+  requiredRotationDegrees: 0

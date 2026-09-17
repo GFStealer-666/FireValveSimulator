@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 7
   m_EditorClassIdentifier: 
+  statisticsId: 476da1d5e6d542c0af844337e9574ef3
   stepName: Wait 10 minutes
   objectTags: []
   hintObjectTags:

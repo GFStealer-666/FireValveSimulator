@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 16
   m_EditorClassIdentifier: 
+  statisticsId: a71fd630eab043e2b99ae400dd096a54
   stepName: Turn on both discharge valve
   objectTags:
   - DischargeValve1
   - DischargeValve2
+  hintObjectTags: []
   actionType: 1
   pressureTarget: 0
   waitDuration: 0

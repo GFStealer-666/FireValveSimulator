@@ -7,11 +7,14 @@ namespace FireValveSimulator
     public class PressureSimulator : MonoBehaviour
     {
         public ActionOrderManager actionOrderManager;
-        public TextMeshProUGUI pressureText;
+        public TMP_Text pressureText;
+        [Tooltip("{0} is replaced with the rounded pressure value.")]
+        [SerializeField] private string pressureLabelFormat = "Pressure: {0} PSI";
         public float pressureIncreaseRate = 10f;
 
         private float currentPressure = 0f;
         private Coroutine pressureCoroutine;
+        private bool hasLoggedInvalidLabelFormat;
 
         public bool isActive = false;
 
@@ -57,13 +60,13 @@ namespace FireValveSimulator
                 currentPressure += pressureIncreaseRate * Time.deltaTime;
 
                 if (pressureText != null)
-                    pressureText.text = $"Pressure: {Mathf.RoundToInt(currentPressure)} PSI";
+                    pressureText.text = FormatPressureLabel(currentPressure);
 
                 yield return null;
             }
 
             if (pressureText != null)
-                pressureText.text = $"Pressure: {Mathf.RoundToInt(targetPressure)} PSI";
+                pressureText.text = FormatPressureLabel(targetPressure);
 
             pressureCoroutine = null;
             currentPressure = 0f;
@@ -73,6 +76,30 @@ namespace FireValveSimulator
 
             if (pressureText != null)
                 pressureText.text = "";
+        }
+
+        private string FormatPressureLabel(float pressure)
+        {
+            string format = string.IsNullOrWhiteSpace(pressureLabelFormat)
+                ? "Pressure: {0} PSI"
+                : pressureLabelFormat;
+
+            try
+            {
+                string label = string.Format(format, Mathf.RoundToInt(pressure));
+                hasLoggedInvalidLabelFormat = false;
+                return label;
+            }
+            catch (System.FormatException)
+            {
+                if (!hasLoggedInvalidLabelFormat)
+                {
+                    Debug.LogWarning($"Invalid pressure label format '{format}'. Use {{0}} for the pressure value.", this);
+                    hasLoggedInvalidLabelFormat = true;
+                }
+
+                return $"Pressure: {Mathf.RoundToInt(pressure)} PSI";
+            }
         }
     }
 }

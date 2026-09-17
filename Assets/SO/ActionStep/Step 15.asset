@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 15
   m_EditorClassIdentifier: 
+  statisticsId: 9c4e2a87a950438aa1968cd3434bd1fc
   stepName: Switch auto AC Fire Pump
   objectTags:
   - ACFirePumpSwitchAuto
+  hintObjectTags: []
   actionType: 4
+  pressureTarget: 0
+  waitDuration: 0
+  requiredRotationDegrees: 0

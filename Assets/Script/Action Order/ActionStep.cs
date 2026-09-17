@@ -1,6 +1,7 @@
 namespace FireValveSimulator
 {
     // ====== Script 1: ActionStep.cs ======
+    using System;
     using UnityEngine;
 
     public enum ActionType
@@ -20,6 +21,7 @@ namespace FireValveSimulator
     [System.Serializable]
     public class ActionStep : ScriptableObject
     {
+        [SerializeField, HideInInspector] private string statisticsId;
         public string stepName;
         public string[] objectTags;
         [Tooltip("Optional objects to outline as hints. When empty, Object Tags are used.")]
@@ -33,9 +35,28 @@ namespace FireValveSimulator
         public float PressureTarget => pressureTarget;
         public float WaitDuration => waitDuration;
         public float RequiredRotationDegrees => requiredRotationDegrees;
+        public string StatisticsId => statisticsId;
         public string[] HintObjectTags => hintObjectTags != null && hintObjectTags.Length > 0
             ? hintObjectTags
             : objectTags;
+
+        public string GetStatisticsId(int fallbackStepIndex)
+        {
+            return !string.IsNullOrWhiteSpace(statisticsId)
+                ? statisticsId
+                : $"legacy:{fallbackStepIndex}:{name}";
+        }
+
+    #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!string.IsNullOrWhiteSpace(statisticsId))
+                return;
+
+            statisticsId = Guid.NewGuid().ToString("N");
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+    #endif
 
     #if UNITY_EDITOR
         [UnityEditor.CustomEditor(typeof(ActionStep))]

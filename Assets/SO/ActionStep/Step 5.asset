@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 5
   m_EditorClassIdentifier: 
+  statisticsId: 2637d4a28eb14368a1546831ecb37d42
   stepName: Turn on water valve hydrant
   objectTags:
   - WaterSwitchHydrant1
+  hintObjectTags: []
   actionType: 3
+  pressureTarget: 0
+  waitDuration: 0
+  requiredRotationDegrees: 0

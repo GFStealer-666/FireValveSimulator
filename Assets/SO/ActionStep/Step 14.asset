@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 14
   m_EditorClassIdentifier: 
+  statisticsId: c21968e95e3b4936b9fd6d6c97ab1b21
   stepName: Switch auto Jockey Pump
   objectTags:
   - JockeyPump1
+  hintObjectTags: []
   actionType: 4
+  pressureTarget: 0
+  waitDuration: 0
+  requiredRotationDegrees: 0

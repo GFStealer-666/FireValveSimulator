@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 18
   m_EditorClassIdentifier: 
+  statisticsId: f2f921d35dd14cdd8e1176877ed9e88c
   stepName: Check PSI Intensity
   objectTags: []
   hintObjectTags:

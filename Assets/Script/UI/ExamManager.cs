@@ -79,6 +79,7 @@ namespace FireValveSimulator
 
             examRunning = true;
             remainingTimeFloat = examDuration;
+            currentTimeFloat = 0f;
 
             if (countdownLabel != null)
                 countdownLabel.text = FormatRemainingTime(remainingTimeFloat);
@@ -110,6 +111,7 @@ namespace FireValveSimulator
         {
             examRunning = false;
             remainingTimeFloat = examDuration;
+            currentTimeFloat = 0f;
 
             if (countdownLabel != null)
                 countdownLabel.text = FormatRemainingTime(remainingTimeFloat);

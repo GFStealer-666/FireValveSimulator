@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3a78a07c550cc458fbca9e2f503b98, type: 3}
   m_Name: Step 0
   m_EditorClassIdentifier: 
+  statisticsId: fe07012f2df94ef0b8ffda365bea0829
   stepName: Wear ear protection
   objectTags:
   - EarPhone
+  hintObjectTags: []
   actionType: 8
   pressureTarget: 0
   waitDuration: 0
