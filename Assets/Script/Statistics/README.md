@@ -13,6 +13,8 @@ The statistics system stores the newest 30 exam records in
    automatically when left empty.
 4. Add `StatisticsPanelController` to the statistics UI root and assign the
    repository, tab objects, labels, and row prefab/content references.
+   Assign the Personal and Overview `Toggle` components to one `ToggleGroup`;
+   the controller disables `Allow Switch Off` so exactly one tab stays active.
 5. Connect the main-menu Statistics button to
    `StatisticsPanelController.Open`.
 

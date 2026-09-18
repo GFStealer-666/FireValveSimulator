@@ -17,8 +17,9 @@ namespace FireValveSimulator.Statistics.UI
         [SerializeField] private GameObject panelRoot;
         [SerializeField] private GameObject personalView;
         [SerializeField] private GameObject overviewView;
-        [SerializeField] private Button personalTabButton;
-        [SerializeField] private Button overviewTabButton;
+        [SerializeField] private ToggleGroup tabToggleGroup;
+        [SerializeField] private Toggle personalTabToggle;
+        [SerializeField] private Toggle overviewTabToggle;
         [SerializeField] private Button closeButton;
         [SerializeField] private GameObject personalTabSelectedIndicator;
         [SerializeField] private GameObject overviewTabSelectedIndicator;
@@ -61,6 +62,7 @@ namespace FireValveSimulator.Statistics.UI
         private void Awake()
         {
             ResolveRepository();
+            ConfigureTabToggles();
             WireButtons();
 
             if (panelRoot == null)
@@ -70,6 +72,7 @@ namespace FireValveSimulator.Statistics.UI
         private void OnEnable()
         {
             ResolveRepository();
+            ConfigureTabToggles();
             if (repository != null)
                 repository.DataChanged += HandleDataChanged;
 
@@ -94,15 +97,11 @@ namespace FireValveSimulator.Statistics.UI
 
         public void Open()
         {
-            showingOverview = false;
+            SetActiveTab(false);
 
             if (panelRoot != null && !panelRoot.activeSelf)
-            {
                 panelRoot.SetActive(true);
-                return;
-            }
 
-            ShowPersonal();
             RefreshAll();
         }
 
@@ -114,15 +113,12 @@ namespace FireValveSimulator.Statistics.UI
 
         public void ShowPersonal()
         {
-            showingOverview = false;
-            RefreshTabVisibility();
+            SetActiveTab(false);
         }
 
         public void ShowOverview()
         {
-            showingOverview = true;
-            RefreshTabVisibility();
-            RefreshOverview();
+            SetActiveTab(true);
         }
 
         [ContextMenu("Statistics/Refresh Panel")]
@@ -315,6 +311,55 @@ namespace FireValveSimulator.Statistics.UI
             SetActive(overviewTabSelectedIndicator, showingOverview);
         }
 
+        private void SetActiveTab(bool overview)
+        {
+            showingOverview = overview;
+
+            if (personalTabToggle != null)
+                personalTabToggle.SetIsOnWithoutNotify(!overview);
+            if (overviewTabToggle != null)
+                overviewTabToggle.SetIsOnWithoutNotify(overview);
+
+            RefreshTabVisibility();
+            if (overview)
+                RefreshOverview();
+        }
+
+        private void HandlePersonalTabChanged(bool isOn)
+        {
+            if (isOn)
+                SetActiveTab(false);
+        }
+
+        private void HandleOverviewTabChanged(bool isOn)
+        {
+            if (isOn)
+                SetActiveTab(true);
+        }
+
+        private void ConfigureTabToggles()
+        {
+            if (tabToggleGroup == null)
+                tabToggleGroup = personalTabToggle != null
+                    ? personalTabToggle.group
+                    : overviewTabToggle != null ? overviewTabToggle.group : null;
+
+            if (tabToggleGroup != null)
+            {
+                tabToggleGroup.allowSwitchOff = false;
+
+                if (personalTabToggle != null)
+                    personalTabToggle.group = tabToggleGroup;
+                if (overviewTabToggle != null)
+                    overviewTabToggle.group = tabToggleGroup;
+            }
+
+            if (personalTabToggle != null)
+                personalTabToggle.SetIsOnWithoutNotify(!showingOverview);
+            if (overviewTabToggle != null)
+                overviewTabToggle.SetIsOnWithoutNotify(showingOverview);
+        }
+
         private void HandleDataChanged()
         {
             if (panelRoot == null || panelRoot.activeInHierarchy)
@@ -326,10 +371,10 @@ namespace FireValveSimulator.Statistics.UI
             if (listenersWired)
                 return;
 
-            if (personalTabButton != null)
-                personalTabButton.onClick.AddListener(ShowPersonal);
-            if (overviewTabButton != null)
-                overviewTabButton.onClick.AddListener(ShowOverview);
+            if (personalTabToggle != null)
+                personalTabToggle.onValueChanged.AddListener(HandlePersonalTabChanged);
+            if (overviewTabToggle != null)
+                overviewTabToggle.onValueChanged.AddListener(HandleOverviewTabChanged);
             if (closeButton != null)
                 closeButton.onClick.AddListener(Close);
 
@@ -341,10 +386,10 @@ namespace FireValveSimulator.Statistics.UI
             if (!listenersWired)
                 return;
 
-            if (personalTabButton != null)
-                personalTabButton.onClick.RemoveListener(ShowPersonal);
-            if (overviewTabButton != null)
-                overviewTabButton.onClick.RemoveListener(ShowOverview);
+            if (personalTabToggle != null)
+                personalTabToggle.onValueChanged.RemoveListener(HandlePersonalTabChanged);
+            if (overviewTabToggle != null)
+                overviewTabToggle.onValueChanged.RemoveListener(HandleOverviewTabChanged);
             if (closeButton != null)
                 closeButton.onClick.RemoveListener(Close);
 
