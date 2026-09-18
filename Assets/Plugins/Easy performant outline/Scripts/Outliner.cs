@@ -224,7 +224,15 @@ namespace EPOOutline
             if (targetCamera == null)
                 targetCamera = GetComponent<Camera>();
 
+            // On Android XR, OpenXR can report XRSettings.enabled as false while scene
+            // components are being enabled. Forcing the stereo camera into an
+            // intermediate render texture at that point can leave the headset
+            // swapchain black for the lifetime of the scene.
+#if UNITY_ANDROID && !UNITY_EDITOR
+            targetCamera.forceIntoRenderTexture = targetCamera.stereoTargetEye == StereoTargetEyeMask.None;
+#else
             targetCamera.forceIntoRenderTexture = targetCamera.stereoTargetEye == StereoTargetEyeMask.None || !UnityEngine.XR.XRSettings.enabled;
+#endif
 
 #if UNITY_EDITOR
             outliners.Add(this);

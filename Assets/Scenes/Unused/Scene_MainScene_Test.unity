@@ -26406,8 +26406,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  stepOutlineBindings: []
   isExam: 0
   stepText: {fileID: 0}
+  timerPsiPanel: {fileID: 0}
+  waitTimer: {fileID: 0}
+  pressureSimulator: {fileID: 0}
 --- !u!4 &995306150
 Transform:
   m_ObjectHideFlags: 0
@@ -28227,6 +28231,10 @@ MonoBehaviour:
   returnToMenuButton: {fileID: 0}
   skipStepButtonRoot: {fileID: 0}
   skipStepButton: {fileID: 0}
+  previousStepButtonRoot: {fileID: 0}
+  previousStepButton: {fileID: 0}
+  currentStepLabel: {fileID: 0}
+  currentStepLabelFormat: 'Current Step : {0}'
 --- !u!1 &1057122296
 GameObject:
   m_ObjectHideFlags: 0
@@ -28493,6 +28501,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 0}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -37914,6 +37925,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 1359942292}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -40302,6 +40316,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 1485044164}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -41762,7 +41779,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExamManager
   examDuration: 300
-  timer: {fileID: 513496790}
+  remainingTimeFloat: 0
+  currentTimeFloat: 0
+  isExamTimeLimited: 1
+  countdownLabel: {fileID: 0}
+  currentTimeLabel: {fileID: 0}
   onExamStart:
     m_PersistentCalls:
       m_Calls:
@@ -43960,6 +43981,8 @@ MonoBehaviour:
   showMenuOnStart: 1
   isExamSkippable: 1
   examSkipPenaltySeconds: 20
+  manageFarInteractors: 1
+  farInteractors: []
   onEnterMenu:
     m_PersistentCalls:
       m_Calls: []
@@ -44058,6 +44081,10 @@ MonoBehaviour:
   returnToMenuButton: {fileID: 1353433950}
   skipStepButtonRoot: {fileID: 863007332}
   skipStepButton: {fileID: 238246595}
+  previousStepButtonRoot: {fileID: 0}
+  previousStepButton: {fileID: 0}
+  currentStepLabel: {fileID: 0}
+  currentStepLabelFormat: 'Current Step : {0}'
 --- !u!1 &1574309741
 GameObject:
   m_ObjectHideFlags: 0
@@ -46815,6 +46842,9 @@ MonoBehaviour:
   fallbackRequiredRotationDegrees: 1000
   maxDegreesPerFrame: 45
   linkedValve: {fileID: 1653769343}
+  restrictToStepDirection: 1
+  turnOnDirection: 1
+  turnOffDirection: -1
   testRotationDegrees: 90
   testRotationDuration: 5
   testRotationCountsForActionProgress: 0
@@ -53033,6 +53063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionOrderManager: {fileID: 995306149}
   pressureText: {fileID: 0}
+  pressureLabelFormat: 'Pressure: {0} PSI'
   pressureIncreaseRate: 10
   isActive: 1
 --- !u!4 &1956059098

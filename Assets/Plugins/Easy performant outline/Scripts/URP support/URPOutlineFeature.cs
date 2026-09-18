@@ -272,6 +272,18 @@ namespace EPOOutline
 
         private List<Outliner> outliners = new List<Outliner>();
 
+        // ActionOrderManager disables every configured Outlinable while the
+        // simulator is in the menu (and in exam mode). Do not enqueue EPO's
+        // full-screen pass in that state: even an empty outline pass performs
+        // a final blit, which can discard the XR camera color buffer on Quest.
+        private List<Outlinable> activeOutlinables = new List<Outlinable>();
+
+        private bool HasActiveOutlinables()
+        {
+            Outlinable.GetAllActiveOutlinables(activeOutlinables);
+            return activeOutlinables.Count > 0;
+        }
+
         private bool GetOutlinersToRenderWith(RenderingData renderingData, List<Outliner> outliners)
         {
             outliners.Clear();
@@ -310,6 +322,9 @@ namespace EPOOutline
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
             if (!GetOutlinersToRenderWith(renderingData, outliners))
+                return;
+
+            if (!HasActiveOutlinables())
                 return;
 
             foreach (var outliner in outliners)
