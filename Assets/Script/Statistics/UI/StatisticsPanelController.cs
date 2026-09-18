@@ -6,6 +6,7 @@ namespace FireValveSimulator.Statistics.UI
     using System.Linq;
     using TMPro;
     using UnityEngine;
+    using UnityEngine.Serialization;
     using UnityEngine.UI;
 
     public sealed class StatisticsPanelController : MonoBehaviour
@@ -26,17 +27,15 @@ namespace FireValveSimulator.Statistics.UI
 
         [Header("Record List")]
         [SerializeField] private Transform recordContent;
+        [SerializeField] private ToggleGroup recordToggleGroup;
         [SerializeField] private StatisticsRecordRowView recordRowPrefab;
         [SerializeField] private TMP_Text capacityLabel;
         [SerializeField] private GameObject noRecordsMessage;
 
         [Header("Selected Record")]
-        [SerializeField] private GameObject selectedRecordRoot;
         [SerializeField] private TMP_Text selectedUserLabel;
-        [SerializeField] private TMP_Text selectedDateAndOutcomeLabel;
-        [SerializeField] private TMP_Text selectedDurationLabel;
-        [SerializeField] private TMP_Text selectedCorrectLabel;
-        [SerializeField] private TMP_Text selectedWrongLabel;
+        [FormerlySerializedAs("selectedDateAndOutcomeLabel")]
+        [SerializeField] private TMP_Text selectedRecordDetailLabel;
         [SerializeField] private Transform stepContent;
         [SerializeField] private StatisticsStepRowView stepRowPrefab;
 
@@ -63,6 +62,7 @@ namespace FireValveSimulator.Statistics.UI
         {
             ResolveRepository();
             ConfigureTabToggles();
+            ConfigureRecordToggleGroup();
             WireButtons();
 
             if (panelRoot == null)
@@ -73,6 +73,7 @@ namespace FireValveSimulator.Statistics.UI
         {
             ResolveRepository();
             ConfigureTabToggles();
+            ConfigureRecordToggleGroup();
             if (repository != null)
                 repository.DataChanged += HandleDataChanged;
 
@@ -145,13 +146,12 @@ namespace FireValveSimulator.Statistics.UI
                 capacityLabel.text = $"{sessions.Count} of {repository.MaximumRecords} offline records saved";
 
             SetActive(noRecordsMessage, sessions.Count == 0);
-            SetActive(selectedRecordRoot, sessions.Count > 0);
 
             if (sessions.Count == 0)
             {
                 selectedSessionId = null;
                 DeactivateRows(recordRows, 0);
-                DeactivateRows(stepRows, 0);
+                ClearSelectedRecord();
                 return;
             }
 
@@ -167,6 +167,7 @@ namespace FireValveSimulator.Statistics.UI
                     break;
 
                 string sessionId = session.sessionId;
+                row.SetGroup(recordToggleGroup);
                 row.Bind(
                     session,
                     FormatDate(session.startedAtUtc),
@@ -188,23 +189,17 @@ namespace FireValveSimulator.Statistics.UI
 
             if (selected == null)
             {
-                SetActive(selectedRecordRoot, false);
-                DeactivateRows(stepRows, 0);
+                ClearSelectedRecord();
                 return;
             }
 
-            SetActive(selectedRecordRoot, true);
-
             if (selectedUserLabel != null)
                 selectedUserLabel.text = selected.userName;
-            if (selectedDateAndOutcomeLabel != null)
-                selectedDateAndOutcomeLabel.text = $"{FormatDate(selected.startedAtUtc)} · {FormatOutcome(selected.outcome)}";
-            if (selectedDurationLabel != null)
-                selectedDurationLabel.text = FormatDuration(selected.totalTimeSeconds);
-            if (selectedCorrectLabel != null)
-                selectedCorrectLabel.text = selected.correctCount.ToString();
-            if (selectedWrongLabel != null)
-                selectedWrongLabel.text = selected.wrongCount.ToString();
+            if (selectedRecordDetailLabel != null)
+            {
+                selectedRecordDetailLabel.text =
+                    $"{FormatDate(selected.startedAtUtc)} · {FormatDuration(selected.totalTimeSeconds)} · {FormatOutcome(selected.outcome)}";
+            }
 
             if (updateRecordSelection)
             {
@@ -360,6 +355,15 @@ namespace FireValveSimulator.Statistics.UI
                 overviewTabToggle.SetIsOnWithoutNotify(showingOverview);
         }
 
+        private void ConfigureRecordToggleGroup()
+        {
+            if (recordToggleGroup == null && recordContent != null)
+                recordToggleGroup = recordContent.GetComponent<ToggleGroup>();
+
+            if (recordToggleGroup != null)
+                recordToggleGroup.allowSwitchOff = false;
+        }
+
         private void HandleDataChanged()
         {
             if (panelRoot == null || panelRoot.activeInHierarchy)
@@ -405,11 +409,20 @@ namespace FireValveSimulator.Statistics.UI
         private void HideAllRows()
         {
             DeactivateRows(recordRows, 0);
-            DeactivateRows(stepRows, 0);
+            ClearSelectedRecord();
             DeactivateRows(wrongRows, 0);
             DeactivateRows(timeRows, 0);
             SetActive(noRecordsMessage, true);
-            SetActive(selectedRecordRoot, false);
+        }
+
+        private void ClearSelectedRecord()
+        {
+            if (selectedUserLabel != null)
+                selectedUserLabel.text = string.Empty;
+            if (selectedRecordDetailLabel != null)
+                selectedRecordDetailLabel.text = string.Empty;
+
+            DeactivateRows(stepRows, 0);
         }
 
         private static T GetOrCreateRow<T>(List<T> pool, T prefab, Transform parent, int index) where T : Component

@@ -25,9 +25,17 @@ Use a `ScrollRect` with `RectMask2D` for both record and step lists. Put a
 controller pools row instances and only rebinds them when data changes or the
 panel opens.
 
+Add a `ToggleGroup` to the record-list Content object and keep
+`Allow Switch Off` disabled. Assign it to the panel controller's Record Toggle
+Group field so one record is always selected.
+
 Create three lightweight row prefabs:
 
-- `StatisticsRecordRowView`: one selectable User/session row.
+- `StatisticsRecordRowView`: one selectable User/session row. Its root uses a
+  `Toggle`, not a `Button`; the Toggle's Checkmark is the selected
+  border/background. Configure separate Completed, Failed, and Abandoned
+  indicator objects with their labels inside; exactly one is shown for every
+  record.
 - `StatisticsStepRowView`: one personal step-result row.
 - `StatisticsOverviewRowView`: one ranked overview row. Configure its bar Image
   as `Filled / Horizontal` if a fill bar is used.
