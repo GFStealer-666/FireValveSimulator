@@ -182,6 +182,9 @@ namespace FireValveSimulator
             Debug.Log("Time's up. Exam over.");
             examRunning = false;
             ResetStepHelpers();
+            if (actionOrderManager != null)
+                actionOrderManager.ResetToIdle();
+
             onExamFailed?.Invoke();
 
             if (actionOrderManager != null)
@@ -190,6 +193,9 @@ namespace FireValveSimulator
 
         private void HandleExamCompleted()
         {
+            if (!examRunning)
+                return;
+
             Debug.Log("Exam completed successfully.");
             examRunning = false;
             ResetStepHelpers();

@@ -129,6 +129,8 @@ namespace FireValveSimulator
             SimulatorModeManager.OnModeChanged += HandleModeChanged;
             ActionOrderManager.OnAllStepsCompleted += HandleAllStepsCompleted;
             ActionOrderManager.OnCurrentStepChanged += HandleCurrentStepChanged;
+            if (examManager != null)
+                examManager.onExamFailed.AddListener(HandleExamFailed);
 
             if (wireButtonListenersOnEnable)
                 WireButtonListeners();
@@ -141,6 +143,8 @@ namespace FireValveSimulator
             SimulatorModeManager.OnModeChanged -= HandleModeChanged;
             ActionOrderManager.OnAllStepsCompleted -= HandleAllStepsCompleted;
             ActionOrderManager.OnCurrentStepChanged -= HandleCurrentStepChanged;
+            if (examManager != null)
+                examManager.onExamFailed.RemoveListener(HandleExamFailed);
 
             if (wireButtonListenersOnEnable)
                 UnwireButtonListeners();
@@ -703,6 +707,14 @@ namespace FireValveSimulator
         private void HandleAllStepsCompleted()
         {
             ShowCompletePanel();
+        }
+
+        private void HandleExamFailed()
+        {
+            SetReturnToMenuButtonVisible(true);
+            SetSkipStepButtonVisible(false);
+            SetPreviousStepButtonVisible(false);
+            SetPanels(examFailed: true);
         }
 
         private void HandleCurrentStepChanged(ActionStep step, int stepIndex)

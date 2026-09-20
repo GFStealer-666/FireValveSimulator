@@ -259,7 +259,7 @@ namespace FireValveSimulator
 
         public void RegisterAction(string objectTag, ActionType actionType)
         {
-            if (!HasSteps() || currentStepIndex >= orderedSteps.Count)
+            if (!sequenceActive || !HasSteps() || currentStepIndex >= orderedSteps.Count)
                 return;
 
             currentStep = orderedSteps[currentStepIndex];
